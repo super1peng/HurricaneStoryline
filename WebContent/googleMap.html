@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Hurrican Location</title>
+
+	<style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 95% }
+    </style>
+	
+	<!-- reference to Google Maps API -->
+   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=true"></script> 
+	<script type="text/javascript" src="jquery-1.8.1.js"></script>
+	<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />	
+	<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js"></script>
+	
+    <script type="text/javascript">
+		
+	var map;
+			
+      function initialize() {
+	  	geocoder = new google.maps.Geocoder();
+        var mapOptions = {
+          center: new google.maps.LatLng(38.62700, -90.19940),
+          zoom: 5,
+          mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+        map = new google.maps.Map(document.getElementById("map_canvas"),
+            mapOptions);
+			
+			setMarkers(map,nameOfPlaces);		
+      }
+	  
+	  var nameOfPlaces = new Array("Southeastern Bahamas","Southeastern Bahamas","Florida","Gulf of Mexico","Gulf of Mexico",
+	  								"Gulf of Mexico","Near Buras-Triumph,Louisiana","Eastern Great Lakes");
+	  
+	  function setMarkers(map, nameOfPlaces){
+				
+				for (var i = 0; i < nameOfPlaces.length; i++) {
+					   
+						geocoder.geocode({'address':nameOfPlaces[i]}, function(results, status){
+            							if (status == google.maps.GeocoderStatus.OK) {
+											var markerLatLng = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+											var nameOfTitile = results[0].formatted_address;
+											var marker = new google.maps.Marker({
+												position: markerLatLng,
+												map: map,
+												title: nameOfTitile
+											});
+											attachSecreteMessage(marker, nameOfTitile, markerLatLng);
+										}
+										else{
+											console.log("results not found");
+										}
+										});
+						
+					}
+				}
+	  
+	  //set related content to the marker
+	  function attachSecreteMessage(marker,nameOfTitile, markerLatLng){
+	  	
+		//content displayed on infowindow of this marker
+			var content = '<div>' + 
+					'<br> location: ' + nameOfTitile + 
+					'<br> Latitude: ' + markerLatLng.lat() +
+					'<br> Longtitude: ' + markerLatLng.lng() + 
+					//'<br> Event: ' + event[3] + '</div>' + 
+					"<div><img src='./img/800px-Katrina_2005_track.jpg'>" + '</div>';
+			
+			var infowindow = new google.maps.InfoWindow({
+				content :  content,
+				size : new google.maps.Size(50,50)
+				
+			});
+			
+			//add listener to this marker
+			google.maps.event.addListener(marker,'click',function(){
+			infowindow.open(map,marker);
+			});
+		
+	  }
+	  
+
+	 google.maps.event.addDomListener(window,'load',initialize);
+	  
+    </script>
+
+	</head>
+	<body>
+		<div id="map_canvas"> </div>
+			
+	</body>
+</html>

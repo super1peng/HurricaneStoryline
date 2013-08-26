@@ -1,0 +1,33 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+  
+<style type="text/css">
+
+.draggable { width: 90px; height: 90px; padding: 0.5em; float: left; margin: 0 10px 10px 0; }
+#draggable { margin-bottom:20px;}
+  
+  #resizable h3 { text-align: center; margin: 0; }
+  
+</style>
+
+<script type="text/javascript">
+$(function() {
+    $( "#draggable" ).draggable({ axis: "x" }).resizable();
+})
+</script>
+</head>
+<body>
+<div style="width:500px;height: 500px"> </div> asdf
+<div style="width:500px;height: 500px">
+<div id="draggable" class="draggable ui-widget-content ui-state-active">
+  <p>I can be dragged only horizontally</p>
+</div>
+</div>
+
+</body>
+</html>

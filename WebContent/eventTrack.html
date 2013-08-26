@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Eat Less, Exercise More</title>
+<script type="text/javascript"
+	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=true"></script>
+<script type="text/javascript" src="jquery-1.8.1.js"></script>
+<link type="text/css" href="css/start/jquery-ui-1.8.23.custom.css"
+	rel="Stylesheet" />
+<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js"></script>
+
+<style type="text/css">
+html {
+	height: 100%
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0
+}
+
+#map_canvas {
+	width: 100%;
+	height: 90%;
+}
+
+#infoDiv {
+	font-size: 12px;
+	border-spacing: 1px;
+	width: auto;
+	height: auto;
+}
+</style>
+
+<script type="text/javascript">
+			
+
+	var map;
+	var geocoder;
+	var events; // events we can from servlet, but actually i do not need this
+
+	var eventRange = new Array();
+	var previousPosition = {
+		left : 0,
+		right : 0
+	}; // class singleton
+
+	var previousRange = new Array();
+	var index = 0;
+
+	//add one array to map so as to store markers attached to map.
+	google.maps.Map.prototype.markers = new Array();
+	//function to clear markers attached to this map, so as to refresh the map	
+	google.maps.Map.prototype.clearMarkers = function() {
+		for ( var i = 0; i < this.markers.length; i++) {
+			this.markers[i].setMap(null);
+		}
+		this.markers = new Array();
+	};
+
+
+	$(function() {
+		//$.get("GetEventsServlet", {}, function(returnedData, status) {
+		$.get("GetSerializedEvents", {}, function(returnedData, status) {
+			//Initialize google maps, Show all events first.
+			events = returnedData.allevents;
+			//events = [];
+			//setMarkers(map, events, returnedData.storyline);
+			//setMarkers(map, [], returnedData.storyline);
+			console.log(returnedData.storyline);
+			
+			setMarkers(map, events, []);
+			eventRange = events;
+			//Initialize Slider, add Slider to #mySlider, set max attribute the max date, min the min date	
+			var minTime = events[0].eventDate;
+			var maxTime = events[events.length - 1].eventDate;
+			previousPosition.left = minTime;
+			previousPosition.right = maxTime;
+			var step = (maxTime - minTime) / 100;
+			$("#slideHandle1").val(changeMillisecondsToDateString(minTime));
+			$("#slideHandle2").val(changeMillisecondsToDateString(maxTime));
+			$("#mySlider").slider({
+				values : [ minTime, maxTime ],
+				max : maxTime,
+				step : step,
+				min : minTime,
+				stop : function(event, ui) {
+					$("#slideHandle1").empty();
+					$("#slideHandle2").empty();
+					var values = $("#mySlider").slider("option", "values");
+					var valueLeft = values[0];
+					var valueRight = values[1];
+					//if nothing changes, do nothing
+					if (valueLeft == previousPosition.left
+							&& valueRight == previousPosition.right)
+						return;
+					//find events range from values[0] to values[1];
+					if (valueRight < valueLeft)
+						findEvents(valueRight, valueLeft);
+					else
+						findEvents(valueLeft, valueRight);
+					if (typeof eventRange[0] == 'undefined') {
+						console.log("Sorry, no result found!");
+						eventRange = previousRange;
+						$("#mySlider")
+								.slider("option", "values", [
+										previousPosition.left,
+										previousPosition.right ]);
+						$("#mySlider").slider("refresh");
+					} else {
+						previousPosition.left = values[0];
+						previousPosition.right = values[1];
+						previousRange = eventRange;
+					}
+					setMarkers(map, eventRange);
+					$("#slideHandle1")
+							.val(changeMillisecondsToDateString(valueLeft));
+					$("#slideHandle2")
+							.val(changeMillisecondsToDateString(valueRight));
+				} });
+		});
+	});
+	
+	function changeMillisecondsToDateString(millionSeconds) {
+		var myDate = new Date(millionSeconds);
+		return myDate.toLocaleString().substring(0, 15);
+	}
+	
+	function mapInitialize() {
+		geocoder = new google.maps.Geocoder();
+		var mapOptions = {
+			center : new google.maps.LatLng(38.62700, -90.19940),
+			zoom : 4,
+			mapTypeId : google.maps.MapTypeId.TERRAIN };
+		map = new google.maps.Map(document.getElementById("map_canvas"),
+				mapOptions);
+	}
+	
+	
+	//set markers related the events in the map when load the page
+	function setMarkers(map, eventsArray, storyline) {
+		//before loop, we set variable index to 0, set previous markers unattached to map
+		map.clearMarkers();
+		for ( var i = 0; i < eventsArray.length; i++) {
+			var markerLatLng = new google.maps.LatLng(
+					eventsArray[i].latlng.latitude,
+					eventsArray[i].latlng.longtitude);
+			var marker = new google.maps.Marker({ position : markerLatLng,
+			map : map,
+			title : eventsArray[i].eventFormatAddress });
+			console.log(marker.getZIndex());
+			map.markers.push(marker);
+			attachSecreteMessage(marker, eventsArray[i]);
+		}
+		
+		for ( var i = 0; i < storyline.length; i++) {
+			var markerLatLng = new google.maps.LatLng(
+				storyline[i].latlng.latitude,
+				storyline[i].latlng.longtitude);
+			var marker = new google.maps.Marker({ position : markerLatLng,
+			map : map,
+			title : eventsArray[i].eventFormatAddress,
+			icon: "http://openclipart.org/people/mightyman/green.svg",
+			zIndex: google.maps.Marker.MAX_ZINDEX});
+			console.log(marker.getZIndex());
+			map.markers.push(marker);
+			attachSecreteMessage(marker, storyline[i]);
+		}
+	}
+	
+	
+	
+	//set related content to the marker
+	function attachSecreteMessage(marker, event) {
+		//content displayed on infowindow of this marker
+		var content = "<div id='infoDiv'>"
+				+ "<br> location: <a target = '_blank' href = '" + event.eventURL + "'> "
+				+ event.eventLocation + "</a>" + "<br> Latitude: "
+				+ event.latlng.latitude + "<br> Longtitude: "
+				+ event.latlng.longtitude + "<br> Info: " + event.eventContent
+				+ "<br> Date: "
+				+ changeMillisecondsToDateString(event.eventDate)
+				+ "<div><img src='./img/800px-Katrina_2005_track.jpg'>"
+				+ "</div>";
+		var infowindow = new google.maps.InfoWindow({ content : content,
+		size : new google.maps.Size(50, 50) });
+		//add listener to this marker
+		google.maps.event.addListener(marker, 'click', function() {
+			infowindow.open(map, marker);
+		});
+	}
+	
+	
+	//find events range from min to max
+	function findEvents(min, max) {
+		var minIndex = 0;
+		var maxIndex = 0;
+		eventRange = [];
+		for ( var i = 0; i <= events.length; i++) {
+			//already searched the last element
+			if (i == events.length) {
+				minIndex = i;
+				break;
+			}
+			if (events[i].eventDate >= min) {
+				minIndex = i;
+				break;
+			}
+		}
+		for ( var i = 0; i <= events.length; i++) {
+			//already searched the last element
+			if (i == events.length) {
+				maxIndex = i - 1;
+				break;
+			}
+			if (events[i].eventDate > max) {
+				maxIndex = i - 1;
+				break;
+			}
+		}
+		if (minIndex <= maxIndex) {
+			for (i = minIndex; i <= maxIndex; i++) {
+				eventRange.push(events[i]);
+			}
+		} else
+			evetnRange = [];// set it to empty;
+	}
+</script>
+</head>
+
+
+<body onload="mapInitialize()">
+
+	<div id="map_canvas"></div>
+	<div style="margin-right: 20px; margin-left: 20px;" id="mySlider"></div>
+	<input type="text" id="slideHandle1" readonly value="">
+	<input type="text" id="slideHandle2" readonly value="">
+
+</body>
+</html>

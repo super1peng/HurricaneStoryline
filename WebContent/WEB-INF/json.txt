@@ -1,0 +1,17 @@
+resp.setContentType("application/json; charset=uft-8");
+resp.setHeader("pragma", "no-cache");
+resp.setHeader("cache-control","no-cache");
+
+PrintWriter out = resp.getWriter();
+out.print(jsonObject);
+out.flush();
+
+
+
+//得到绝对路径
+String path = req.getSession().getServletContext().getRealPath("/storeImage");
+
+
+
+String result
+JSONObject jsonContent = new JSONObject(result);

@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Eat Less, Exercise More</title>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=true"></script> 
+        <script type="text/javascript" src="jquery-1.8.1.js"></script> 
+		<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />	
+		<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js"></script>
+		
+		
+		<script type="text/javascript">
+			
+			var myString = "what!!!";
+			
+			$(function(){
+				$("#button1").click(function(){
+					$.get("GetEventsServlet",
+					{
+						categoryName: $("#categoryName").val(),
+						picSource: $("input[name=picSource]:checked").val()
+						
+					},function(returnedData, status){
+						var s = "";
+						for(var i = 0; i < returnedData.length; i++)
+						{
+							s = s + returnedData[i].eventURL + "," + returnedData[i].eventContent + "," + 
+									returnedData[i].eventDate + "<br>"; 
+						}
+						
+						$("#jsonDiv").empty();
+						$("#jsonDiv").append(s).append(myString);
+						
+					});
+				});
+				
+				$("#date").datepicker();
+				$("#mySlider").slider({
+					values:[1,10],
+					max : 10,
+					step: 0.5,
+					min : 1,
+					stop: function(event,ui){
+						$("#slideHandle1").empty();
+						$("#slideHandle2").empty();
+						var values = $("#mySlider").slider("option","values");
+						$("#slideHandle1").val(values[0]);
+						$("#slideHandle2").val(values[1]);
+					}
+				});
+				
+			});
+		</script>
+	</head>
+	
+	
+	<body>
+		
+		<input type="text" id="categoryName">
+		<input type="radio" name="picSource" value="google" checked>google
+		<input type="radio" name="picSource" value="flicker">Flicker
+		<input type="button" id="button1" value="search">
+		<input type="text" id="date" name="date">
+		<div style="width:30%;margin-left:20px;background=#b0c4de" id="mySlider"></div>
+		<input type="text" id="slideHandle1" readonly value="">
+		<input type="text" id="slideHandle2" readonly value="">
+		<div id="jsonDiv"></div>
+		
+	</body>
+</html>
