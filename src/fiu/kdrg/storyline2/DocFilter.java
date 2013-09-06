@@ -1,5 +1,6 @@
 package fiu.kdrg.storyline2;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,17 +116,17 @@ public class DocFilter {
 
 	public static void main(String[] args) {
 		
-//		DocFilter filter = new DocFilter();
-//		filter.setMiniSim(0.5);
-//		filter.setMaxDist(5);
-//		ArrayList<Event> filteredEvents = filter.filter(100);
-//		
-//		try {
-//			SerializeFactory.serialize(Util.rootDir + "filterEvents.out", filteredEvents);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		DocFilter filter = new DocFilter();
+		filter.setMiniSim(0.5);
+		filter.setMaxDist(5);
+		ArrayList<Event> filteredEvents = filter.filter(100);
+		
+		try {
+			SerializeFactory.serialize(Util.rootDir + "filterEvents.out", filteredEvents);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ArrayList<Event> filterEvents = null;
 		
 		try {
@@ -137,6 +138,10 @@ public class DocFilter {
 		
 		System.out.println(filterEvents.size());
 		EventUtil.displayEvents(EventUtil.sortEventByDate(filterEvents));
+		for(Event event : filterEvents)
+		{
+			System.out.println(event.getId());
+		}
 		
 	}
 	
