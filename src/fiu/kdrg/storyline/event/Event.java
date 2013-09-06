@@ -17,6 +17,7 @@ public class Event implements Serializable{
 	int id;
 	double weight;
 	int clusterId;
+	boolean isMainEvent;
 	
 	public Event() {
 		// TODO Auto-generated constructor stub
@@ -30,6 +31,7 @@ public class Event implements Serializable{
 		this.eventLocation = eventLocation;
 		this.eventDate = eventDate;
 		this.latlng = latlng;
+		this.isMainEvent = false; //default value
 		weight = 0;
 		clusterId = -1;
 	}
@@ -110,6 +112,18 @@ public class Event implements Serializable{
 
 	public void setClusterId(int clusterId) {
 		this.clusterId = clusterId;
+	}
+	
+	
+
+
+	public boolean isMainEvent() {
+		return isMainEvent;
+	}
+
+
+	public void setMainEvent(boolean isMainEvent) {
+		this.isMainEvent = isMainEvent;
 	}
 
 

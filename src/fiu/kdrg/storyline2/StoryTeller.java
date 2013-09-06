@@ -196,12 +196,14 @@ public class StoryTeller {
 		int current = start;
 		int next = 0;
 		storyline = new ArrayList<Event>();
+		events.get(start).setMainEvent(true);
 		storyline.add(events.get(start));
 		
 		while(current != end){
 			
 			for(next = 0; next < n; next++){
 				if(path[current][next] == 1){
+					events.get(next).setMainEvent(true);
 					storyline.add(events.get(next));
 					current = next;
 					break;
@@ -252,7 +254,8 @@ public class StoryTeller {
 		try {
 			storyTeller.ilp();
 			EventUtil.displayEvents(storyTeller.storyline);
-		} catch (IloException e) {
+			SerializeFactory.serialize(Util.rootDir + "finalResult.out", storyTeller.events);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

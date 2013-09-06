@@ -1,6 +1,5 @@
 package fiu.kdrg.storyline2;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +31,7 @@ public class DocFilter {
 			e.printStackTrace();
 		}
 		events = loader.getEvents();
+		setEventID();
 		
 		miniSim = 0.5;
 		maxDist = 5;
@@ -100,6 +100,16 @@ public class DocFilter {
 
 	public void setMaxDist(double maxDist) {
 		this.maxDist = maxDist;
+	}
+	
+	/**
+	 * set id for events, after this, all events will identifies by its id.
+	 */
+	private void setEventID()
+	{
+		for(int id = 0; id < events.size(); id++){
+			events.get(id).setId(id);
+		}
 	}
 
 
