@@ -4,7 +4,7 @@
 
 function changeMillisecondsToDateString(millionSeconds) {
 				var myDate = new Date(millionSeconds);
-				return myDate.toLocaleString().substring(0, 15);
+				return myDate.toLocaleString().substring(0, 10);
 }
 
 

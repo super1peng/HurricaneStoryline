@@ -1,4 +1,0 @@
-1. clear previous markers
-2. generate bar for date section
-2. integrate some functions
-3. inplements by java instead of javascript
