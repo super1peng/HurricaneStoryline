@@ -12,6 +12,7 @@
         </script>
         <script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js">
         </script>
+		<script type="text/javascript" src="js/mapUtil.js"></script>
         <style type="text/css">
             html {
                 height: 100%
@@ -33,9 +34,10 @@
         </style>
         <script type="text/javascript">
         	google.maps.visualRefresh = true;
-			
             var map;
-            var geocoder;
+			var events = [];
+			var testData = []; 
+			var mapUtil = new GoogleMapUtilObject();
             
             //add one array to map so as to store markers attached to map.
             google.maps.Map.prototype.markers = new Array();
@@ -57,17 +59,11 @@
 				
 			});
 			
-			
-
-
-
-
 
 
 // #user defined function
             
             function mapInitialize(){
-                geocoder = new google.maps.Geocoder();
                 var mapOptions = {
                     center: new google.maps.LatLng(38.62700, -90.19940),
                     zoom: 4,
@@ -81,7 +77,9 @@
 				
 				$.get("LoadFinalEventServlet",{},function(rtnData){
 					
-					console.log(rtnData);
+					events = rtnData.storyline;
+					//console.log(events);
+					mapUtil.setMarkers(map,events);
 					
 				},'json');
 				
