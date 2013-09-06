@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <title>storyline</title>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=true">
+        </script>
+        <script type="text/javascript" src="jquery-1.8.1.js">
+        </script>
+        <link type="text/css" href="css/start/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />
+        <script type="text/javascript" src="js/jquery-1.8.0.min.js">
+        </script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js">
+        </script>
+        <style type="text/css">
+            html {
+                height: 100%
+            }
+            
+            body {
+                height: 100%;
+                margin: 0;
+                padding: 0
+            } #map_canvas {
+                width: 100%;
+                height: 100%;
+            } #infoDiv {
+                font-size: 12px;
+                border-spacing: 1px;
+                width: auto;
+                height: auto;
+            }
+        </style>
+        <script type="text/javascript">
+        	google.maps.visualRefresh = true;
+			
+            var map;
+            var geocoder;
+            
+            //add one array to map so as to store markers attached to map.
+            google.maps.Map.prototype.markers = new Array();
+            //function to clear markers attached to this map, so as to refresh the map	
+            google.maps.Map.prototype.clearMarkers = function(){
+                for (var i = 0; i < this.markers.length; i++) {
+                    this.markers[i].setMap(null);
+                }
+                this.markers = new Array();
+            };
+			
+			
+
+
+// # ready function			
+			$(function(){
+				
+				loadFinalEvents();
+				
+			});
+			
+			
+
+
+
+
+
+
+// #user defined function
+            
+            function mapInitialize(){
+                geocoder = new google.maps.Geocoder();
+                var mapOptions = {
+                    center: new google.maps.LatLng(38.62700, -90.19940),
+                    zoom: 4,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+            }
+			
+			
+			function loadFinalEvents(){
+				
+				$.get("LoadFinalEventServlet",{},function(rtnData){
+					
+					console.log(rtnData);
+					
+				},'json');
+				
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+        </script>
+    </head>
+    <body onload="mapInitialize()">
+        <div id="map_canvas">
+        </div>
+    </body>
+</html>
