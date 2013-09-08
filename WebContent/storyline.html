@@ -79,8 +79,10 @@
 					
 					events = rtnData.storyline;
 					//console.log(events);
-					mapUtil.setMarkers(map,events);
-					
+					//mapUtil.setMarkers(map,events);
+					var storylineNodes = chooseNodesOfMainStoryline(events);
+					mapUtil.setMarkers(map,storylineNodes);
+					mapUtil.displayStoryline(map,storylineNodes);
 				},'json');
 				
 			}
