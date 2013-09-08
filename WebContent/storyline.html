@@ -37,7 +37,7 @@
             var map;
 			var events = [];
 			var testData = []; 
-			var mapUtil = new GoogleMapUtilObject();
+			var mapUtil = new FiuStorylineMapUtilObject();
             
             //add one array to map so as to store markers attached to map.
             google.maps.Map.prototype.markers = new Array();
@@ -82,30 +82,13 @@
 					//mapUtil.setMarkers(map,events);
 					var storylineNodes = chooseNodesOfMainStoryline(events);
 					mapUtil.setMarkers(map,storylineNodes);
-					mapUtil.displayStoryline(map,storylineNodes);
+					mapUtil.displayPoly(map,storylineNodes,mapUtil.storylinePoly);
 				},'json');
 				
 			}
 
 
 			//function 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
