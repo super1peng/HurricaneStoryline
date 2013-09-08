@@ -1,89 +1,78 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<!DOCTYPE>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-        <title>test</title>
-        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=true">
-        </script>
-        <script type="text/javascript" src="jquery-1.8.1.js">
-        </script>
-        <link type="text/css" href="css/start/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />
-        <script type="text/javascript" src="js/jquery-1.8.0.min.js">
-        </script>
-        <script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js">
-        </script>
-        <script type="text/javascript" src="js/mapUtil.js">
-        </script>
-        <style type="text/css">
-            html {
-                height: 100%
-            }
-            
-            body {
-                height: 100%;
-                margin: 0;
-                padding: 0
-            } #map_canvas {
-                width: 100%;
-                height: 100%;
-            } #infoDiv {
-                font-size: 12px;
-                border-spacing: 1px;
-                width: auto;
-                height: auto;
-            }
-        </style>
-        <script type="text/javascript">
-            var poly;
-            var map;
-            
-            function initialize(){
-                var chicago = new google.maps.LatLng(41.879535, -87.624333);
-                var mapOptions = {
-                    zoom: 7,
-                    center: chicago,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                
-                map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-                
-                var polyOptions = {
-                    strokeColor: '#000000',
-                    strokeOpacity: 1.0,
-                    strokeWeight: 3
-                }
-                poly = new google.maps.Polyline(polyOptions);
-                poly.setMap(map);
-                
-                // Add a listener for the click event
-                google.maps.event.addListener(map, 'click', addLatLng);
-            }
-            
-            /**
-             * Handles click events on a map, and adds a new point to the Polyline.
-             * @param {google.maps.MouseEvent} event
-             */
-            function addLatLng(event){
-            
-                var path = poly.getPath();
-                
-                // Because path is an MVCArray, we can simply append a new coordinate
-                // and it will automatically appear
-				console.log(event.latLng);
-                path.push(event.latLng);
-                // Add a new marker at the new plotted point on the polyline.
-                //var marker = new google.maps.Marker({
-                  //  position: event.latLng,
-                   // title: '#' + path.getLength(),
-                    //map: map
-                //});
-            }
-            
-            google.maps.event.addDomListener(window, 'load', initialize);
-        </script>
-    </head>
-    <body>
-        <div id="map_canvas">
-        </div>
-    </body>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>MarkerClusterer v3 Example</title>
+
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 10px 20px 20px;
+        font-family: Arial;
+        font-size: 16px;
+      }
+
+      #map-container {
+        padding: 6px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #ccc #ccc #999 #ccc;
+        -webkit-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        -moz-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        box-shadow: rgba(64, 64, 64, 0.1) 0 2px 5px;
+        width: 600px;
+      }
+
+      #map {
+        width: 600px;
+        height: 400px;
+      }
+
+    </style>
+
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=true"></script>
+    <script type="text/javascript" src="./js/data.json"></script>
+    <script type="text/javascript">
+      var script = '<script type="text/javascript" src="./js/markerclusterer';
+      if (document.location.search.indexOf('compiled') !== -1) {
+        script += '_compiled';
+      }
+      script += '.js"><' + '/script>';
+      document.write(script);
+    </script>
+
+    <script type="text/javascript">
+      function initialize() {
+        var center = new google.maps.LatLng(37.4419, -122.1419);
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 3,
+          center: center,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var markers = [];
+        for (var i = 0; i < 100; i++) {
+          var dataPhoto = data.photos[i];
+          var latLng = new google.maps.LatLng(dataPhoto.latitude,
+              dataPhoto.longitude);
+          var marker = new google.maps.Marker({
+            position: latLng
+          });
+          markers.push(marker);
+        }
+        var markerCluster = new MarkerClusterer(map, markers);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <h3>A simple example of MarkerClusterer (100 markers)</h3>
+    <p>
+      <a href="?compiled">Compiled</a> |
+      <a href="?">Standard</a> version of the script.
+    </p>
+    <div id="map-container"><div id="map"></div></div>
+  </body>
 </html>

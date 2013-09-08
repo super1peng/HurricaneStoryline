@@ -81,6 +81,11 @@ function FiuStorylineMapUtilObject(){
 		        offset: '100%'
 		      }]
 		  };
+	
+	this.markerClusterOptions = {
+			gridSize: 50, maxZoom: 15
+	};
+	
 	this.iconURL = "http://openclipart.org/people/mightyman/green.svg";
 	
 	
@@ -132,6 +137,7 @@ FiuStorylineMapUtilObject.prototype = {
 				
 				var refThis = this;
 				this.addListenerByClickMarker(marker, refThis);
+				var mc = new MarkerClusterer(map, this.mediumStorylineMarkers, this.markerClusterOptions);
 				
 			}
 		},
