@@ -125,8 +125,8 @@ public class DocFilter {
 		
 		DocFilter filter = new DocFilter();
 		filter.setMiniSim(0.5);
-		filter.setMaxDist(5);
-		ArrayList<Event> filteredEvents = filter.filter(100);
+		filter.setMaxDist(3);
+		ArrayList<Event> filteredEvents = filter.filter(200);
 		
 		try {
 			SerializeFactory.serialize(Util.rootDir + "filterEvents.out", filteredEvents);

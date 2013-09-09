@@ -20,13 +20,16 @@ public class StoryTeller {
 	List<Event> events;//sorted by events' date
 	double[][] simGraph;
 	int[][][] locConstraints;
+	int [][] distConstraints;
 	int maxEdge = 0;
+	double radius = 0;
 	List<Event> storyline;
 	
 	public StoryTeller(List<Event> events) {
 		// TODO Auto-generated constructor stub
 		this.events = EventUtil.sortEventByDate((ArrayList<Event>) events);
 		maxEdge = 20;//default val
+		radius = 3;
 		storyline = null;
 	}
 	
@@ -50,9 +53,30 @@ public class StoryTeller {
 	
 	
 	
+	protected void computeDistConstraints(double radius){
+		
+		int n = events.size();
+		distConstraints = new int[n][n];
+		
+		// note that distConstraints[i][i] = 1
+		for(int i = 0; i < n; i++){
+			for(int j = i; j < n; j++){
+				//has distance less or equal than radius
+				if(events.get(i).hasDistanceLe(events.get(j), radius)){
+					distConstraints[i][j] = 1;
+					distConstraints[j][i] = 1;
+				}
+			}
+		}
+		
+	}
+	
+	
+	
 	public void ilp() throws IloException{
 		
 		computeLineConstraints();
+		computeDistConstraints(radius);
 		simGraph = StoryUtil.computeSimilarity(events);
 		
 		int node_n = events.size();
@@ -102,6 +126,19 @@ public class StoryTeller {
 			//sum{next_node_{i,j}} <= node_active_{i}
 			cplex.addLe(nodeOutEdge, nodeActiveVars[i]); 
 			cplex.addLe(nodeInEdge, nodeActiveVars[i]);
+		}
+		
+		
+		//the chain can not have two nodes getting too close
+		// note that distConstraints[i][i] = 1
+		for(int i = 0; i < node_n; i++){			
+			IloIntExpr distConstraint = cplex.intExpr();
+			for(int j = 0; j < node_n; j++){
+				distConstraint = cplex.sum(distConstraint,
+						cplex.prod(distConstraints[i][j], nodeActiveVars[j]));
+			}
+			// if you want only and only if one neighbor choose, you can set this to "equal"
+			cplex.addLe(distConstraint, 1);
 		}
 		
 		
@@ -234,7 +271,8 @@ public class StoryTeller {
 		
 		
 		StoryTeller storyTeller = new StoryTeller(filterEvents);
-		storyTeller.setMaxEdge(20);
+		storyTeller.setMaxEdge(40);
+		storyTeller.setRadius(3);
 //		EventUtil.displayEvents(storyTeller.events);
 //		storyTeller.simGraph = StoryUtil.computeSimilarity(storyTeller.events);
 //		for(int i = 0; i < 100; i++){
@@ -265,6 +303,12 @@ public class StoryTeller {
 
 	public void setMaxEdge(int maxEdge) {
 		this.maxEdge = maxEdge;
+	}
+
+
+
+	public void setRadius(double radius) {
+		this.radius = radius;
 	}
 	
 	
