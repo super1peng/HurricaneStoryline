@@ -137,7 +137,7 @@ FiuStorylineMapUtilObject.prototype = {
 				
 				var refThis = this;
 				this.addListenerByClickMarker(marker, refThis);
-				var mc = new MarkerClusterer(map, this.mediumStorylineMarkers, this.markerClusterOptions);
+				//var mc = new MarkerClusterer(map, this.mediumStorylineMarkers, this.markerClusterOptions);
 				
 			}
 		},
