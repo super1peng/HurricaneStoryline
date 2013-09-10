@@ -21,14 +21,15 @@ public class StoryTeller {
 	double[][] simGraph;
 	int[][][] locConstraints;
 	int [][] distConstraints;
-	int maxEdge = 0;
+	int[] edgeRange = new int[2];
 	double radius = 0;
 	List<Event> storyline;
 	
 	public StoryTeller(List<Event> events) {
 		// TODO Auto-generated constructor stub
 		this.events = EventUtil.sortEventByDate((ArrayList<Event>) events);
-		maxEdge = 20;//default val
+		edgeRange[0] = 5;
+		edgeRange[1] = 20; //default val
 		radius = 3;
 		storyline = null;
 	}
@@ -88,6 +89,8 @@ public class StoryTeller {
 		IloIntVar[] nodeActiveVars = cplex.intVarArray(node_n, 0, 1);
 		IloIntVar[] nextNodeActiveVars = cplex.intVarArray(nextNode_n, 0, 1);
 		IloNumVar minedge = cplex.numVar(Double.MIN_VALUE, Double.MAX_VALUE);
+		IloIntVar edgeNum = cplex.intVar(edgeRange[0], edgeRange[1]);
+		
 
 		
 		//constraint 1 , active most maxEdge nodes
@@ -95,7 +98,7 @@ public class StoryTeller {
 		for(int i = 0; i < node_n; i++){
 			t = cplex.sum(t, nodeActiveVars[i]);
 		}
-		cplex.addEq(t, maxEdge);
+		cplex.addEq(t, edgeNum);
 		
 		
 		//constraint 2, active most maxEdge-1 edges(next_node)
@@ -107,7 +110,7 @@ public class StoryTeller {
 				}
 			}
 		}
-		cplex.addEq(maxEdgeCt, maxEdge-1);
+		cplex.addEq(maxEdgeCt, cplex.sum(edgeNum, -1));
 		
 		
 		//nodes have one in-edge and one out-edge
@@ -271,7 +274,7 @@ public class StoryTeller {
 		
 		
 		StoryTeller storyTeller = new StoryTeller(filterEvents);
-		storyTeller.setMaxEdge(40);
+		storyTeller.setEdgeRange(5, 20);
 		storyTeller.setRadius(3);
 //		EventUtil.displayEvents(storyTeller.events);
 //		storyTeller.simGraph = StoryUtil.computeSimilarity(storyTeller.events);
@@ -301,8 +304,9 @@ public class StoryTeller {
 	}
 
 
-	public void setMaxEdge(int maxEdge) {
-		this.maxEdge = maxEdge;
+	public void setEdgeRange(int min,int max) {
+		this.edgeRange[0] = min;
+		this.edgeRange[1] = max;
 	}
 
 
