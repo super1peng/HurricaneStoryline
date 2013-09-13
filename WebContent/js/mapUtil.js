@@ -158,7 +158,7 @@ FiuStorylineMapUtilObject.prototype = {
 //				console.log(2);
 				map.setZoom(7);
 				map.setCenter(marker.getPosition());
-				var neighbor = chooseMarkerNeighbors(marker, events, 6);
+				var neighbor = chooseMarkerNeighbors(marker, refThis.events, 6);
 				refThis.setLayerTwoMarker(map,neighbor);
 				refThis.clearPoly(refThis.storylinePoly);
 				refThis.clearPoly(refThis.mediumStorylinePoly);
@@ -212,6 +212,10 @@ FiuStorylineMapUtilObject.prototype = {
 		setPolyOptions: function(polyOptions)
 		{
 			this.polyOptions = polyOptions;
+		},
+		
+		setEvents: function(events){
+			this.events = events;
 		},
 		
 		getPolyOptions: function()

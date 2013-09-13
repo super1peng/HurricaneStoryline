@@ -34,12 +34,12 @@ public class DocFilter {
 		events = loader.getEvents();
 		setEventID();
 		
-//		try {
-//			SerializeFactory.serialize(Util.rootDir + "allEvents.out", events);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			SerializeFactory.serialize(Util.rootDir + "allEvents.out", events);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		miniSim = 0.5;
 		maxDist = 5;

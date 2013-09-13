@@ -20,7 +20,7 @@
             }
             
             body {
-                height: 100%;
+                height: 90%;
                 margin: 0;
                 padding: 0
             } #map_canvas {
@@ -36,7 +36,6 @@
         <script type="text/javascript">
         	google.maps.visualRefresh = true;
             var map;
-			var events = [];
 			var testData = []; 
 			var mapUtil = new FiuStorylineMapUtilObject();
             
@@ -76,14 +75,31 @@
 			
 			function loadFinalEvents(){
 				
-				$.get("LoadFinalEventServlet",{},function(rtnData){
+				
+				$.get("LoadFinalEventServlet",{fileName:"allEvents.out"},function(rtnData){
+					var events = rtnData.events;
+					$('.showAll').click(function(){
+						mapUtil.setMarkers(map,events);
+					});
+				});
+				
+				$.get("LoadFinalEventServlet",{fileName:"finalResult.out"},function(rtnData){
 					
-					events = rtnData.storyline;
-					//console.log(events);
-					//mapUtil.setMarkers(map,events);
-					var storylineNodes = chooseNodesOfMainStoryline(events);
-					mapUtil.setMarkers(map,storylineNodes);
-					mapUtil.displayPoly(map,storylineNodes,mapUtil.storylinePoly);
+					var events = rtnData.events;
+					mapUtil.setEvents(events);
+					
+					$('.showDom').click(function(){
+						mapUtil.setMarkers(map,events);
+					});
+					
+					
+					$('.showStoryline').click(function(){
+						var storylineNodes = chooseNodesOfMainStoryline(events);
+						mapUtil.setMarkers(map,storylineNodes);
+						mapUtil.displayPoly(map,storylineNodes,mapUtil.storylinePoly);
+					});
+					
+					
 				},'json');
 				
 			}
@@ -97,6 +113,16 @@
         </script>
     </head>
     <body onload="mapInitialize()">
+    	<div class="controlPanel">
+    		<input type="button" class="showAll" value="showAll">
+			<input type="button" class="clearAll" value="clearAll">
+			<input type="button" class="showDom" value="showDom">
+			<input type="button" class="clearDom" value="clearDom">
+			<input type="button" class="showStoryline" value="showStoryline">
+    	</div>
+		<div>
+			
+		</div>
         <div id="map_canvas">
         </div>
     </body>
