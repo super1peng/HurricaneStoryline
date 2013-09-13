@@ -57,6 +57,7 @@ function FiuStorylineMapUtilObject(){
 	this.mediumStorylinePoly = new google.maps.Polyline();
 	//singleton InfoWindow
 	this.infowindow = new google.maps.InfoWindow({size : new google.maps.Size(50, 50) });
+	this.markerCluster = {};
 	
 	//default value
 	var lineSymbol = {
@@ -158,11 +159,28 @@ FiuStorylineMapUtilObject.prototype = {
 //				console.log(2);
 				map.setZoom(7);
 				map.setCenter(marker.getPosition());
-				var neighbor = chooseMarkerNeighbors(marker, refThis.events, 6);
-				refThis.setLayerTwoMarker(map,neighbor);
+
 				refThis.clearPoly(refThis.storylinePoly);
 				refThis.clearPoly(refThis.mediumStorylinePoly);
-				refThis.displayPoly(map,neighbor,refThis.mediumStorylinePoly,refThis.redPolyOptions);
+				//refThis.displayPoly(map,neighbor,refThis.mediumStorylinePoly,refThis.redPolyOptions);
+				
+				var fname = "storyline" + marker.event.id + ".out";
+				console.log(fname);
+				$.get("LoadFinalEventServlet",{fileName:fname},function(rtnData){
+					var layer2Storyline = rtnData.events;
+					refThis.setLayerTwoMarker(map,layer2Storyline);
+					refThis.displayPoly(map,layer2Storyline,refThis.mediumStorylinePoly,refThis.redPolyOptions);
+					try {
+						refThis.markerCluster.clearMarkers();
+						refThis.markerCluster.redraw();
+					} catch (e) {
+						// TODO: handle exception
+						console.log(e);
+					}
+					refThis.markerCluster = new MarkerClusterer(map, refThis.mediumStorylineMarkers);
+//					refThis.markerCluster = addMarkers(refThis.mediumStorylineMarkers);
+					refThis.markerCluster.redraw();
+				});
 			});
 		},
 		
