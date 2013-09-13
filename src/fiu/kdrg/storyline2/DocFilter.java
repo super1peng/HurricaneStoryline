@@ -14,32 +14,14 @@ import fiu.kdrg.util.Util;
 
 public class DocFilter {
 	
-	StorylineGen loader;
 	List<Event> events;
 	double miniSim;
 	double maxDist;
 	
-	public DocFilter() {
+	public DocFilter(List<Event> events) {
 		// TODO Auto-generated constructor stub
-		this.loader  = new StorylineGen();
-		try {
-			loader.loadEvents("./sandy_all_clean_nodup_events_latlng.txt", 
-					loader.dateFormat.parse("2012-10-24"), 
-					loader.dateFormat.parse("2012-11-06"), 
-					"sandy|hurricane|storm|disaster");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		events = loader.getEvents();
+		this.events = events;
 		setEventID();
-		
-		try {
-			SerializeFactory.serialize(Util.rootDir + "allEvents.out", events);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		miniSim = 0.5;
 		maxDist = 5;
@@ -123,7 +105,7 @@ public class DocFilter {
 
 	public static void main(String[] args) {
 		
-		DocFilter filter = new DocFilter();
+		DocFilter filter = new DocFilter(StoryUtil.loadAllEvents());
 		filter.setMiniSim(0.5);
 		filter.setMaxDist(3);
 		ArrayList<Event> filteredEvents = filter.filter(200);

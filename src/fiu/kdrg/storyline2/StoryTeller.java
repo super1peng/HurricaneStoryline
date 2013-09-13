@@ -17,34 +17,41 @@ import fiu.kdrg.util.Util;
 public class StoryTeller {
 
 	
-	List<Event> events;//sorted by events' date
+	List<Event> domEvents;//sorted by events' date
 	double[][] simGraph;
 	int[][][] locConstraints;
 	int [][] distConstraints;
 	int[] edgeRange = new int[2];
+	double edgeW;
 	double radius = 0;
 	List<Event> storyline;
 	
-	public StoryTeller(List<Event> events) {
+	StoryTeller() {
 		// TODO Auto-generated constructor stub
-		this.events = EventUtil.sortEventByDate((ArrayList<Event>) events);
 		edgeRange[0] = 5;
 		edgeRange[1] = 20; //default val
 		radius = 3;
+		edgeW = 0.001;
 		storyline = null;
+	}
+	
+	public StoryTeller(List<Event> events) {
+		// TODO Auto-generated constructor stub
+		this();
+		this.domEvents = EventUtil.sortEventByDate((ArrayList<Event>) events);
 	}
 	
 	
 	
 	protected void computeLineConstraints(){
 		
-		int n = events.size();
+		int n = domEvents.size();
 		locConstraints = new int[n][n][n];
 		
 		for(int i = 0; i < n; i++){
 			for(int j = i + 1; j < n; j++){
 				for(int k = j + 1; k < n; k++){
-					if(!StoryUtil.hasSharpAngle(events.get(i), events.get(j), events.get(k)))
+					if(!StoryUtil.hasSharpAngle(domEvents.get(i), domEvents.get(j), domEvents.get(k)))
 						locConstraints[i][j][k] = 1;
 				}
 			}
@@ -56,14 +63,14 @@ public class StoryTeller {
 	
 	protected void computeDistConstraints(double radius){
 		
-		int n = events.size();
+		int n = domEvents.size();
 		distConstraints = new int[n][n];
 		
 		// note that distConstraints[i][i] = 1
 		for(int i = 0; i < n; i++){
 			for(int j = i; j < n; j++){
 				//has distance less or equal than radius
-				if(events.get(i).hasDistanceLe(events.get(j), radius)){
+				if(domEvents.get(i).hasDistanceLe(domEvents.get(j), radius)){
 					distConstraints[i][j] = 1;
 					distConstraints[j][i] = 1;
 				}
@@ -78,9 +85,9 @@ public class StoryTeller {
 		
 		computeLineConstraints();
 		computeDistConstraints(radius);
-		simGraph = StoryUtil.computeSimilarity(events);
+		simGraph = StoryUtil.computeSimilarity(domEvents);
 		
-		int node_n = events.size();
+		int node_n = domEvents.size();
 		int nextNode_n = node_n * node_n;
 		
 		IloCplex cplex = new IloCplex();
@@ -189,7 +196,8 @@ public class StoryTeller {
 		}
 		
 		
-		cplex.addMaximize(minedge);
+//		cplex.addMaximize(minedge);
+		cplex.addMaximize(cplex.sum(minedge, cplex.prod(edgeW, edgeNum)));
 		cplex.setParam(IloCplex.DoubleParam.EpGap, 0.005);
 		System.err.println(cplex.solve());
 		System.err.println(cplex.getObjValue());
@@ -236,15 +244,15 @@ public class StoryTeller {
 		int current = start;
 		int next = 0;
 		storyline = new ArrayList<Event>();
-		events.get(start).setMainEvent(true);
-		storyline.add(events.get(start));
+		domEvents.get(start).setMainEvent(true);
+		storyline.add(domEvents.get(start));
 		
 		while(current != end){
 			
 			for(next = 0; next < n; next++){
 				if(path[current][next] == 1){
-					events.get(next).setMainEvent(true);
-					storyline.add(events.get(next));
+					domEvents.get(next).setMainEvent(true);
+					storyline.add(domEvents.get(next));
 					current = next;
 					break;
 				}
@@ -258,6 +266,10 @@ public class StoryTeller {
 		
 	}
 	
+	
+	public void genStoryline() throws IloException{
+		this.ilp();
+	}
 	
 	
 	
@@ -275,7 +287,8 @@ public class StoryTeller {
 		
 		StoryTeller storyTeller = new StoryTeller(filterEvents);
 		storyTeller.setEdgeRange(5, 20);
-		storyTeller.setRadius(3);
+		storyTeller.setRadius(2);
+		storyTeller.setEdgeW(0.001);
 //		EventUtil.displayEvents(storyTeller.events);
 //		storyTeller.simGraph = StoryUtil.computeSimilarity(storyTeller.events);
 //		for(int i = 0; i < 100; i++){
@@ -293,9 +306,9 @@ public class StoryTeller {
 //			}
 //		}
 		try {
-			storyTeller.ilp();
+			storyTeller.genStoryline();
 			EventUtil.displayEvents(storyTeller.storyline);
-			SerializeFactory.serialize(Util.rootDir + "finalResult.out", storyTeller.events);
+			SerializeFactory.serialize(Util.rootDir + "finalResult.out", storyTeller.domEvents);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -314,6 +327,23 @@ public class StoryTeller {
 	public void setRadius(double radius) {
 		this.radius = radius;
 	}
-	
+
+
+
+	public void setEdgeW(double edgeW) {
+		this.edgeW = edgeW;
+	}
+
+
+
+	public List<Event> getDomEvents() {
+		return domEvents;
+	}
+
+
+
+	public void setDomEvents(List<Event> domEvents) {
+		this.domEvents = domEvents;
+	}
 	
 }

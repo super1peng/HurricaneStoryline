@@ -1,5 +1,6 @@
 package fiu.kdrg.storyline2;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,7 +11,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import fiu.kdrg.nlp.StanfordLemmatizer;
+import fiu.kdrg.storyline.StorylineGen;
 import fiu.kdrg.storyline.event.Event;
+import fiu.kdrg.storyline.event.SerializeFactory;
+import fiu.kdrg.util.Util;
 
 public class StoryUtil {
 
@@ -20,6 +24,30 @@ public class StoryUtil {
 	
 	static{
 		lemmatizer = StanfordLemmatizer.getInstance();
+	}
+	
+	
+	public static List<Event> loadAllEvents(){
+		
+		StorylineGen loader  = new StorylineGen();
+		try {
+			loader.loadEvents("./sandy_all_clean_nodup_events_latlng.txt", 
+					loader.dateFormat.parse("2012-10-24"), 
+					loader.dateFormat.parse("2012-11-06"), 
+					"sandy|hurricane|storm|disaster");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			SerializeFactory.serialize(Util.rootDir + "allEvents.out", loader.getEvents());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return loader.getEvents();
 	}
 	
 	
@@ -164,6 +192,21 @@ public class StoryUtil {
 	}
 	
 	
+	
+	public static List<Event> findStoryEvents(List<Event> events){
+		
+		List<Event> rtn = new ArrayList<Event>();
+		for(Event event: events){
+			
+			if(event.isMainEvent()){
+				rtn.add(event);
+			}
+			
+		}
+		
+		return rtn;
+		
+	}
 	
 	
 }
