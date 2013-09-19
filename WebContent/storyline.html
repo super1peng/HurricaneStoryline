@@ -3,8 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <title>storyline</title>
-        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=false">
-        </script>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=false&libraries=visualization"></script>
         <script type="text/javascript" src="jquery-1.8.1.js">
         </script>
         <link type="text/css" href="css/start/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />
@@ -18,7 +17,6 @@
             html {
                 height: 100%
             }
-            
             body {
                 height: 90%;
                 margin: 0;
@@ -78,6 +76,7 @@
 				
 				$.get("LoadFinalEventServlet",{fileName:"allEvents.out"},function(rtnData){
 					var events = rtnData.events;
+					testData = events;
 					$('.showAll').click(function(){
 						mapUtil.setMarkers(map,events);
 					});
