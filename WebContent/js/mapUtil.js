@@ -170,7 +170,7 @@ function FiuStorylineMapUtilObject(){
 	FiuStorylineMapUtilObject.prototype.addListenerBydbClickMarkerToZoomIn = function(marker){
 		google.maps.event.addListener(marker, 'dblclick', function(event) {
 //			console.log(2);
-			map.setZoom(7);
+			map.setZoom(6);
 			map.setCenter(marker.getPosition());
 
 			self.clearPoly(self.storylinePoly);

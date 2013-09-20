@@ -6,7 +6,8 @@
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=false&libraries=visualization"></script>
         <script type="text/javascript" src="jquery-1.8.1.js">
         </script>
-        <link type="text/css" href="css/start/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />
+        <link type="text/css" href="./css/start/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />
+		<link rel="stylesheet" href="./css/hidable.css" />
         <script type="text/javascript" src="js/jquery-1.8.0.min.js">
         </script>
         <script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js">
@@ -18,7 +19,7 @@
                 height: 100%
             }
             body {
-                height: 90%;
+                height: 96%;
                 margin: 0;
                 padding: 0
             } #map_canvas {
@@ -30,6 +31,7 @@
                 width: auto;
                 height: auto;
             }
+
         </style>
         <script type="text/javascript">
         	google.maps.visualRefresh = true;
@@ -92,7 +94,7 @@
 					});
 					
 					
-					$('.showStoryline').click(function(){
+					$('.showStorylinePath').click(function(){
 						var storylineNodes = chooseNodesOfMainStoryline(events);
 						mapUtil.setMarkers(map,storylineNodes);
 						mapUtil.displayPoly(map,storylineNodes,mapUtil.storylinePoly);
@@ -105,9 +107,6 @@
 
 
 			//function 
-
-
-
 			
         </script>
     </head>
@@ -117,12 +116,32 @@
 			<input type="button" class="clearAll" value="clearAll">
 			<input type="button" class="showDom" value="showDom">
 			<input type="button" class="clearDom" value="clearDom">
-			<input type="button" class="showStoryline" value="showStoryline">
+			<input type="button" class="showStorylinePath" value="showStorylinePath">
+			<input type="button" class="hideStorylinePanel" value="hideStorylinePanel">
     	</div>
-		<div>
-			
-		</div>
+		<div style="position:relative;height:100%;width:100%">
         <div id="map_canvas">
         </div>
+		
+		<div class="hidable_toggler" align="center" style="position: absolute;right: 50%;bottom: 0;">
+                <span class="hidable_toggler_btn"><em class="control_arrow_up"></em></span>
+        </div>
+		</div>
+		<div class="hidable_plugin" style="postion:relative">
+			
+			<div class="target_panel">
+                <div class="paramConf">
+                    <div class="paramPanel">
+                    </div>
+                    <div class="paramSubmit" align="center">
+                        <button class="paramBnt" name="button" value="run">
+                            submit
+                        </button>
+                    </div> 
+                </div>
+            </div>
+			
+		</div>
+		
     </body>
 </html>
