@@ -6,12 +6,19 @@
 
 // user defined function
 
+/**
+ * function that change milliseconds to dataString
+ */
 function changeMillisecondsToDateString(millionSeconds) {
 				var myDate = new Date(millionSeconds);
 				return myDate.toLocaleString().substring(0, 10);
 }
 
-
+/**
+ * function that choose nodes belongs to storyline
+ * @param events
+ * @returns {Array}
+ */
 function chooseNodesOfMainStoryline(events)
 {
 	var rtn = [];
@@ -24,12 +31,26 @@ function chooseNodesOfMainStoryline(events)
 }
 
 
+/**
+ * distance between a marker and event
+ * @param marker
+ * @param event
+ * @returns
+ */
 function distOfMarkerAndEvent(marker,event){
 	var latDiff = marker.getPosition().lat() - event.latlng.latitude;
 	var longDiff = marker.getPosition().lng() - event.latlng.longtitude;
 	return Math.sqrt(Math.pow(latDiff,2) + Math.pow(longDiff,2));
 }
 
+
+/**
+ * choose neighbor events of a marker
+ * @param marker
+ * @param events candidate events.
+ * @param radius
+ * @returns {Array} array that contains events that near marker
+ */
 function chooseMarkerNeighbors(marker,events,radius){
 	var rtnEvents = [];
 	
@@ -40,13 +61,23 @@ function chooseMarkerNeighbors(marker,events,radius){
 	return rtnEvents;
 }
 
-// pick up some default value if parameter are not given.
+/**
+ * if a parameter is not set, then choose a defaultVal
+ * @param a
+ * @param defaultVal
+ * @returns
+ */
 function pickDefaultParam(a, defaultVal)
 {
   return a = typeof a !== 'undefined' ? a : defaultVal;
 }
 
 
+/**
+ * convert events' location to a MVCArray
+ * @param events
+ * @returns {google.maps.MVCArray}
+ */
 function eventsToMVCArray(events){	
 	var rtn = [];
 	for(var i = 0; i < events.length; i++){
@@ -57,6 +88,38 @@ function eventsToMVCArray(events){
 }
 
 
+/**
+ * 
+ * @param event
+ */
+function updateContentOfStoryPanel(event){
+	
+	var storyPanel = {};
+	leftN = Math.ceil(event.length / 2);
+	eventL = event.slice(0,leftN);
+	eventR = event.slice(leftN);
+	
+	var leftHtml = "";
+	for(var i=0;i<eventL.length;i++){
+		leftHtml += "<li class='eventID_'"+event[i].id+">"+(i+1)+". <a href=#>"+event[i].eventContent+"</a></li>";
+	}
+	storyPanel.leftHtml = '<ul style="list-style-type:none">'+leftHtml+'</ul>';
+	
+	var rightHtml = "";
+	for(var i=0;i<eventR.length;i++){
+		rightHtml += "<li class='eventID_'"+event[i+leftN].id+">"+(i+leftN+1)+". <a href=#>"+event[i+leftN].eventContent+"</a></li>";
+	}
+	storyPanel.rightHmtl = '<ul style="list-style-type:none">'+rightHtml+'</ul>';
+	
+	$('.storyline_left').html(storyPanel.leftHtml);
+	$('.storyline_right').html(storyPanel.rightHmtl);
+}
+
+
+
+
+
+//user defined object
 // Google Map Util Object
 
 
@@ -124,6 +187,8 @@ function FiuStorylineMapUtilObject(){
 			
 			marker.event = events[i];  //relate event with this marker.
 			self.storylineMarkers.push(marker);
+			
+			updateContentOfStoryPanel(events);
 			
 			self.addListenerByClickMarker(marker);
 			self.addListenerBydbClickMarkerToZoomIn(marker);		
@@ -299,6 +364,7 @@ function FiuGoogleHeatMap(){
 	
 	
 };
+
 
 
 
