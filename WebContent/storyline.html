@@ -8,12 +8,15 @@
         </script>
         <link type="text/css" href="./css/start/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />
 		<link rel="stylesheet" href="./css/hidable.css" />
+		<link rel="stylesheet" href="./css/jqcloud.css" />
         <script type="text/javascript" src="js/jquery-1.8.0.min.js">
         </script>
         <script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js">
         </script>
 		<script type="text/javascript" src="js/mapUtil.js"></script>
 		<script type="text/javascript" src="js/markerclusterer.js"></script>
+		<script type="text/javascript" src="js/wordprocess.js"></script>
+		<script type="text/javascript" src="js/jqcloud-1.0.4.js"></script>
         <style type="text/css">
             html {
                 height: 100%
@@ -56,11 +59,22 @@
 			$(function(){
 				
 				loadFinalEvents();
-				setHidableHeight(250);
+				setHidableHeight(300);
 				
 				$('.hidable_toggler_btn').click(function(){
 					clickHidableToggler();
 				});
+				
+				var word_array = [
+          			{text: "Lorem", weight: 15},
+          			{text: "Ipsum", weight: 9, link: "http://jquery.com/"},
+          			{text: "Dolor", weight: 6, html: {title: "I can haz any html attribute"}},
+          			{text: "Sit", weight: 7},
+          			{text: "Amet", weight: 5}
+          			// ...as many words as you want
+      			];
+				
+				$('.wordcloud').jQCloud(word_array);
 			});
 			
 
@@ -83,6 +97,7 @@
 				$.get("LoadFinalEventServlet",{fileName:"allEvents.out"},function(rtnData){
 					var events = rtnData.events;
 					testData = events;
+					mapUtil.setAllEvents(events);
 					$('.showAll').click(function(){
 						mapUtil.setMarkers(map,events);
 					});
@@ -124,7 +139,7 @@
 			<input type="button" class="hideStorylinePanel" value="hideStorylinePanel">
     	</div>
     	
-		<div style="position:relative;height:100%;width:100%">
+		<div class="mainPanel" style="position:relative;height:100%;width:100%">
         
         <div id="map_canvas">
         </div>
@@ -139,7 +154,11 @@
 				</div>
 			</div>
 		</div>
-       	</div>
+		</div>
+		
+		<div class="wordcloud" style="width: 550px; height: 350px;">
+			
+		</div>
 		
     </body>
 </html>

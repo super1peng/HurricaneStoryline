@@ -265,14 +265,17 @@ function FiuStorylineMapUtilObject(){
 			self.clearPoly(self.mediumStorylinePoly);
 			//refThis.displayPoly(map,neighbor,refThis.mediumStorylinePoly,refThis.redPolyOptions);
 			
+			var heatEvents = chooseMarkerNeighbors(marker,self.allEvents,4);
+			console.log(heatEvents.length);
+			self.heatMap.setData(eventsToMVCArray(heatEvents));			
+			self.heatMap.setMap(map);
+			
 			var fname = "storyline" + marker.event.id + ".out";
 			console.log(fname);
 			$.get("LoadFinalEventServlet",{fileName:fname},function(rtnData){
 				var layer2Storyline = rtnData.events;
 //				console.log(layer2Storyline);
 				updateContentOfStoryPanel(layer2Storyline);
-				self.heatMap.setData(eventsToMVCArray(layer2Storyline));			
-				self.heatMap.setMap(map);
 				
 			});
 		});
@@ -339,6 +342,11 @@ function FiuStorylineMapUtilObject(){
 		self.events = events;
 	};
 	
+	
+	FiuStorylineMapUtilObject.prototype.setAllEvents = function(events){
+		self.allEvents = events;
+	};
+	
 	FiuStorylineMapUtilObject.prototype.getPolyOptions = function()
 	{
 		return self.polyOptions;
@@ -388,27 +396,3 @@ function FiuGoogleHeatMap(){
 	
 	
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
