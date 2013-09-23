@@ -3,24 +3,23 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <title>storyline</title>
-        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=false">
-        </script>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=false&libraries=visualization"></script>
         <script type="text/javascript" src="jquery-1.8.1.js">
         </script>
-        <link type="text/css" href="css/start/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />
+        <link type="text/css" href="./css/start/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />
+		<link rel="stylesheet" href="./css/hidable.css" />
         <script type="text/javascript" src="js/jquery-1.8.0.min.js">
         </script>
         <script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js">
         </script>
 		<script type="text/javascript" src="js/mapUtil.js"></script>
-		<script tyoe="text/javascript" src="js/markerclusterer.js"></script>
+		<script type="text/javascript" src="js/markerclusterer.js"></script>
         <style type="text/css">
             html {
                 height: 100%
             }
-            
             body {
-                height: 90%;
+                height: 96%;
                 margin: 0;
                 padding: 0
             } #map_canvas {
@@ -32,6 +31,7 @@
                 width: auto;
                 height: auto;
             }
+
         </style>
         <script type="text/javascript">
         	google.maps.visualRefresh = true;
@@ -56,7 +56,11 @@
 			$(function(){
 				
 				loadFinalEvents();
+				setHidableHeight(250);
 				
+				$('.hidable_toggler_btn').click(function(){
+					clickHidableToggler();
+				});
 			});
 			
 
@@ -78,6 +82,7 @@
 				
 				$.get("LoadFinalEventServlet",{fileName:"allEvents.out"},function(rtnData){
 					var events = rtnData.events;
+					testData = events;
 					$('.showAll').click(function(){
 						mapUtil.setMarkers(map,events);
 					});
@@ -93,7 +98,7 @@
 					});
 					
 					
-					$('.showStoryline').click(function(){
+					$('.showStorylinePath').click(function(){
 						var storylineNodes = chooseNodesOfMainStoryline(events);
 						mapUtil.setMarkers(map,storylineNodes);
 						mapUtil.displayPoly(map,storylineNodes,mapUtil.storylinePoly);
@@ -105,10 +110,7 @@
 			}
 
 
-			//function 
-
-
-
+			//function
 			
         </script>
     </head>
@@ -118,12 +120,26 @@
 			<input type="button" class="clearAll" value="clearAll">
 			<input type="button" class="showDom" value="showDom">
 			<input type="button" class="clearDom" value="clearDom">
-			<input type="button" class="showStoryline" value="showStoryline">
+			<input type="button" class="showStorylinePath" value="showStorylinePath">
+			<input type="button" class="hideStorylinePanel" value="hideStorylinePanel">
     	</div>
-		<div>
-			
-		</div>
+    	
+		<div style="position:relative;height:100%;width:100%">
+        
         <div id="map_canvas">
         </div>
+		<div class="hidable" style="position:relative;bottom:200px;height:200px;background:rgba(14, 13, 13, 0.38)">
+			<div class="hidable_toggler" align="center" style="position: absolute;right: 50%;top: -22px;">
+               	<span class="hidable_toggler_btn"><em class="control_arrow_down"></em></span>
+  			</div>
+			<div class="storylinePanel" style="background:rgba(14, 13, 13, 0.38):height:200px;width:100%">
+				<div class="storyline_left storyline" style="float:left;height:200px;">
+				</div>
+				<div class="storyline_right storyline" style="float:right;height:200px;">
+				</div>
+			</div>
+		</div>
+       	</div>
+		
     </body>
 </html>
