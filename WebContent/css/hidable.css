@@ -26,7 +26,7 @@
 .control_arrow_down {
     border-color: #16F327 transparent transparent transparent;
     border-style: solid dashed dashed dashed;
-    border-width: 6px 6px 0px 6px;
+    border-width: 12px 12px 0px 12px;
     display: inline-block;
     font-size: 0;
     height: 0;
@@ -63,3 +63,16 @@
 	cursor: pointer;
 }
 
+
+
+.storyline{
+	
+	width:50%;
+	display:block;
+	height:100%;
+	color:#57E912;
+	overfow:scroll;
+	overflow-x:hidden;
+	height:200px;
+	
+}

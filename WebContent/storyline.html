@@ -119,29 +119,23 @@
 			<input type="button" class="showStorylinePath" value="showStorylinePath">
 			<input type="button" class="hideStorylinePanel" value="hideStorylinePanel">
     	</div>
+    	
 		<div style="position:relative;height:100%;width:100%">
+        
         <div id="map_canvas">
         </div>
-		
-		<div class="hidable_toggler" align="center" style="position: absolute;right: 50%;bottom: 0;">
-                <span class="hidable_toggler_btn"><em class="control_arrow_up"></em></span>
-        </div>
+		<div class="hidable" style="position:relative;bottom:200px;height:200px;background:rgba(14, 13, 13, 0.38)">
+			<div class="hidable_toggler" align="center" style="position: absolute;right: 50%;top: -22px;">
+               	<span class="hidable_toggler_btn"><em class="control_arrow_down"></em></span>
+  			</div>
+			<div class="storylinePanel" style="background:rgba(14, 13, 13, 0.38):height:200px;width:100%">
+				<div class="storyline_left storyline" style="float:left;">
+				</div>
+				<div class="storyline_right storyline" style="float:right;">
+				</div>
+			</div>
 		</div>
-		<div class="hidable_plugin" style="postion:relative">
-			
-			<div class="target_panel">
-                <div class="paramConf">
-                    <div class="paramPanel">
-                    </div>
-                    <div class="paramSubmit" align="center">
-                        <button class="paramBnt" name="button" value="run">
-                            submit
-                        </button>
-                    </div> 
-                </div>
-            </div>
-			
-		</div>
+       	</div>
 		
     </body>
 </html>
