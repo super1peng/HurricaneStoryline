@@ -117,8 +117,31 @@ function updateContentOfStoryPanel(event){
 
 
 
+function setHidableHeight(height){
+	$('.hidable').css('height',height);
+	$('.hidable').css('bottom',height);
+	$('.storylinePanel').css('height',height);
+	$('.storyline_left').css('height',height);
+	$('.storyline_right').css('height',height);
+}
 
 
+/**
+ * toggle hidable area.
+ */
+function clickHidableToggler(){
+	var current = $('.hidable_toggler_btn em').attr('class');
+	var flag = (current.trim() == "control_arrow_down");
+	if(flag){
+		$('.hidable_toggler_btn em').removeClass("control_arrow_down");
+		$('.hidable_toggler_btn em').addClass("control_arrow_up");
+		setHidableHeight(0);
+	}else{
+		$('.hidable_toggler_btn em').removeClass("control_arrow_up");
+		$('.hidable_toggler_btn em').addClass("control_arrow_down");
+		setHidableHeight(250);
+	}
+}
 //user defined object
 // Google Map Util Object
 
@@ -247,6 +270,7 @@ function FiuStorylineMapUtilObject(){
 			$.get("LoadFinalEventServlet",{fileName:fname},function(rtnData){
 				var layer2Storyline = rtnData.events;
 //				console.log(layer2Storyline);
+				updateContentOfStoryPanel(layer2Storyline);
 				self.heatMap.setData(eventsToMVCArray(layer2Storyline));			
 				self.heatMap.setMap(map);
 				

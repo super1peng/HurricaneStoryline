@@ -56,7 +56,11 @@
 			$(function(){
 				
 				loadFinalEvents();
+				setHidableHeight(250);
 				
+				$('.hidable_toggler_btn').click(function(){
+					clickHidableToggler();
+				});
 			});
 			
 
@@ -106,7 +110,7 @@
 			}
 
 
-			//function 
+			//function
 			
         </script>
     </head>
@@ -129,9 +133,9 @@
                	<span class="hidable_toggler_btn"><em class="control_arrow_down"></em></span>
   			</div>
 			<div class="storylinePanel" style="background:rgba(14, 13, 13, 0.38):height:200px;width:100%">
-				<div class="storyline_left storyline" style="float:left;">
+				<div class="storyline_left storyline" style="float:left;height:200px;">
 				</div>
-				<div class="storyline_right storyline" style="float:right;">
+				<div class="storyline_right storyline" style="float:right;height:200px;">
 				</div>
 			</div>
 		</div>

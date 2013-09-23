@@ -73,6 +73,10 @@
 	color:#57E912;
 	overfow:scroll;
 	overflow-x:hidden;
-	height:200px;
 	
 }
+
+.storyline a:link {color:rgb(8, 17, 241)}
+.storyline a:visited {color:rgb(8, 17, 241);}
+.storyline a:hover   {color:rgb(255,255,255);}
+.storyline a:active  {color:rgb(8, 17, 241);}
