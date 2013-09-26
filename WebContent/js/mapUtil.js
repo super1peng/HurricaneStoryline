@@ -156,7 +156,7 @@ function FiuStorylineMapUtilObject(){
 	
 	self.storylinePoly = new google.maps.Polyline();
 	self.mediumStorylinePoly = new google.maps.Polyline();
-	self.heatMap = new google.maps.visualization.HeatmapLayer({});
+	self.heatMap = new google.maps.visualization.HeatmapLayer({radius:20});
 	
 	//singleton InfoWindow
 	self.infowindow = new google.maps.InfoWindow({size : new google.maps.Size(50, 50) });
