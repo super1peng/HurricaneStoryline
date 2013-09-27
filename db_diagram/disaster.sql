@@ -38,16 +38,16 @@ CREATE  TABLE IF NOT EXISTS `disaster`.`disaster_news` (
   `post_date` DATE NULL ,
   `url` VARCHAR(500) NULL ,
   `html` LONGTEXT NULL ,
-  `fetchtime` TIMESTAMP NULL ,
+  `fetchtime` TIMESTAMP ,
   PRIMARY KEY (`news_id`) ,
-  UNIQUE INDEX `disaster_id_UNIQUE` (`disaster_id` ASC) ,
   CONSTRAINT `news.FK`
     FOREIGN KEY (`disaster_id` )
     REFERENCES `disaster`.`disasters` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+DEFAULT CHARACTER SET = utf8
+PACK_KEYS = DEFAULT;
 
 
 -- -----------------------------------------------------

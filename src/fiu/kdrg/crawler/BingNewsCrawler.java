@@ -2,17 +2,21 @@ package fiu.kdrg.crawler;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.mysql.jdbc.PreparedStatement;
+import fiu.kdrg.db.DBConnection;
 
 public class BingNewsCrawler {
 
@@ -24,15 +28,24 @@ public class BingNewsCrawler {
 	public static String PUBLISHDATE_SPAN_SEL = ".sn_ST .sn_tm";
 	public static String EDITORS_SPAN_SEL = ".sn_ST .sn_by span";
 	
+	//*************************************************
+	public static String QUERY_DISASTER_SQL = "select id from disasters where name = ?";
+	public static String INSERT_DISASTER_SQL = "insert into disasters (name) values (?)";
+	public static String INSERT_DISASTER_NEWS_SQL = "insert into disaster_news " +
+													"(disaster_id,title,authors,publisher,post_date,url,html) values " +
+													"(?,?,?,?,?,?,?)";
+	
 	private String query;
 	private int numToCraw;
 	private int numPerPage;
+	private int startPage;
 	
-	public BingNewsCrawler(String query,int numToCraw) {
+	public BingNewsCrawler(String query,int startPage,int numToCraw) {
 		// TODO Auto-generated constructor stub
 		this.query = query;
 		this.numToCraw = numToCraw;
 		this.numPerPage = 10;
+		this.startPage = startPage;
 	}
 	
 	
@@ -40,27 +53,85 @@ public class BingNewsCrawler {
 	public void startCrawling(){
 		
 		List<BingSearchNews> news = crawlNewsUrl();
+		System.out.println("news size: " + news.size());
 		for(int i = 0; i < news.size(); i++){
 			try {
+				//download page might be out of time
 				news.get(i).setHtml(downloadWebPage(news.get(i).getUrl()));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			if(i % 50 == 0) System.out.println("Current page: " + i);
 		}
 		
-		
-		
+		Connection conn = null;
+		conn = DBConnection.getDisasterConnection();
+		try {
+			storeNewsData(conn, query, news);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	
 	
-	public void storeData(Connection conn){
+	public void storeNewsData(Connection conn, String query, List<BingSearchNews> news) throws SQLException{
 		
 		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		
+		//find disaster id if already exists in db, otherwise insert one.
+		int disaster_id;
+		pstm = conn.prepareStatement(QUERY_DISASTER_SQL);
+		pstm.setString(1, query);
+		rs = pstm.executeQuery();
+		if(rs.next()){
+			disaster_id = rs.getInt(1);
+		}else{
+			pstm = conn.prepareStatement(INSERT_DISASTER_SQL);
+			pstm.setString(1, query);
+			pstm.executeUpdate();
+			
+			pstm = conn.prepareStatement(QUERY_DISASTER_SQL);
+			pstm.setString(1, query);
+			rs = pstm.executeQuery();
+			if(rs.next()){
+				disaster_id = rs.getInt(1);
+			}else{
+				System.err.println("Store Data Error!");
+				return;
+			}
+		}
 		
 		
+//		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		conn.setAutoCommit(false);
+		pstm = conn.prepareStatement(INSERT_DISASTER_NEWS_SQL);
+		for(int i = 0; i < news.size(); i++){
+			
+			BingSearchNews aNews = news.get(i);
+			//(disaster_id,title,authors,publisher,post_date,url,html)
+			pstm.setInt(1, disaster_id);
+			pstm.setString(2, aNews.getTitle());
+			pstm.setString(3, aNews.getAuthors());
+			pstm.setString(4, aNews.getAuthors());
+			pstm.setString(5,aNews.getDateTime());
+			pstm.setString(6, aNews.getUrl());
+			pstm.setString(7, aNews.getHtml());
+			pstm.addBatch();
+			
+			if((i+1) % 100 == 0){
+				pstm.executeBatch();
+				conn.commit();
+			}
+		}
 		
+		
+		pstm.executeBatch();
+		conn.commit();
+//		conn.setAutoCommit(true);
 	}
 	
 	
@@ -68,7 +139,7 @@ public class BingNewsCrawler {
 		
 		List<BingSearchNews> news = new ArrayList<BingSearchNews>();
 		
-		for(int i = 1; i <= numToCraw; i += numPerPage){
+		for(int i = startPage; i <= numToCraw + startPage; i += numPerPage){
 			
 			String queryUrl = composeBingQueryPageUrl(query, i);
 			Document searchPage = null;
@@ -136,15 +207,15 @@ public class BingNewsCrawler {
 			
 		return bs;
 	}
-	
+	 
 	
 	public static void main(String[] args) {
 	
-		BingNewsCrawler newsCrawer = new BingNewsCrawler("Hurricane Irene", 500);
-		String baseUrl = newsCrawer.composeBingQueryPageUrl("Hurricane Irene", 1);
-		System.out.println(baseUrl);
-		System.out.println(newsCrawer.crawlNewsUrl().size());;
-		
+		BingNewsCrawler newsCrawer = new BingNewsCrawler("Hurricane Sandy", 1, 800);
+		newsCrawer.startCrawling();
+//		String title = "Hurricane Irene-damaged summer camp to rebuild";
+//		System.out.println(title.length());
+//		
 	}
 	
 	
