@@ -131,7 +131,7 @@ public class BingNewsCrawler {
 		
 		pstm.executeBatch();
 		conn.commit();
-//		conn.setAutoCommit(true);
+		conn.setAutoCommit(true);
 	}
 	
 	

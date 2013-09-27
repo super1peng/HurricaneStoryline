@@ -8,6 +8,8 @@ public class BingSearchNews {
 	private String authors;
 	private String publisher;
 	private String html;
+	private String text;
+	private int id;
 	
 	
 	public String getTitle() {
@@ -46,4 +48,17 @@ public class BingSearchNews {
 	public void setHtml(String html) {
 		this.html = html;
 	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 }
