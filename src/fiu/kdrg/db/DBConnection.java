@@ -2,9 +2,7 @@ package fiu.kdrg.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class DBConnection {
 
@@ -36,7 +34,7 @@ public class DBConnection {
 		}
 		
 		try {
-			return DriverManager.getConnection("jdbc:mysql://rescue.cs.fiu.edu:33061/disaster", "zhouwubai",
+			return DriverManager.getConnection("jdbc:mysql://rescue.cs.fiu.edu:33061/disaster", "hadoop",
 					"zwb");
 		} catch (SQLException e) {
 			e.printStackTrace();

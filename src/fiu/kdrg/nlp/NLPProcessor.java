@@ -44,8 +44,8 @@ public class NLPProcessor implements Runnable {
 		this.mycontroller = controller;
 		this.pipeline = new StanfordCoreNLP(props);
 		preprocessor = new NLPPreprocessor();
-
 	}
+	
 
 	@Override
 	public void run() {
@@ -344,7 +344,7 @@ public class NLPProcessor implements Runnable {
 	 * @param events
 	 * @return
 	 */
-	static public List<RawEvent> modifyAmbiguousRawEventMatch(
+	static private List<RawEvent> modifyAmbiguousRawEventMatch(
 			List<RawEvent> events) {
 		if (null == events || events.isEmpty())
 			return null;

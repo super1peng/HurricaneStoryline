@@ -48,10 +48,25 @@ public class HtmlPurefier {
 			conn.setAutoCommit(false);
 			
 			for(int i = 0; i < news.size(); i++){
-//				pstm.setString(1, x)
+				String text = purefy(news.get(i).getHtml(), BP_ARTICLE);
+				pstm.setString(1, text);
+				pstm.setInt(2, news.get(i).getId());
+				pstm.addBatch();
+				
+				if((i+1) % 100 == 0){
+					pstm.executeBatch();
+					conn.commit();
+				}
 			}
 			
+			pstm.executeBatch();
+			conn.commit();
+			conn.setAutoCommit(true);
+			
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BoilerpipeProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -128,14 +143,15 @@ public class HtmlPurefier {
 	
 	public static void main(String[] args) throws BoilerpipeProcessingException {
 		
-		HtmlPurefier purefier = new HtmlPurefier("Hurricane Katrina");
-		List<BingSearchNews> news = purefier.fetchRawBingSearchNews();
-		for(int i = 0 ; i < 2; i++){
-			System.out.println(news.get(i).getUrl());
-			System.out.println();
-			System.out.println(purefier.purefy(news.get(i).getHtml(),HtmlPurefier.BP_ARTICLE_NEWS));
-			System.out.println();
-		}
+		HtmlPurefier purefier = new HtmlPurefier("Hurricane Irene");
+//		List<BingSearchNews> news = purefier.fetchRawBingSearchNews();
+//		for(int i = 0 ; i < 2; i++){
+//			System.out.println(news.get(i).getUrl());
+//			System.out.println();
+//			System.out.println(purefier.purefy(news.get(i).getHtml(),HtmlPurefier.BP_ARTICLE_NEWS));
+//			System.out.println();
+//		}
+		purefier.startPurefy();
 		
 	}
 	
