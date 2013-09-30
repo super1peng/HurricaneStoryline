@@ -109,6 +109,10 @@ public class EventRecognizer implements Runnable {
 		this.pw = pw;
 		this.jobList = jobList;
 	}
+	
+	public EventRecognizer() {
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void run() {
