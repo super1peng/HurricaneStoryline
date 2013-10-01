@@ -18,6 +18,7 @@ class TextJob {
 	}
 	String url;
 	String text;
+	String date;
 }
 
 class JobList {

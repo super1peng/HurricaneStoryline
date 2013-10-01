@@ -191,7 +191,7 @@ public class NLPProcessor implements Runnable {
 	 * @return
 	 */
 	public boolean isSameEntity(NamedEntity ner1, NamedEntity ner2) {
-		return isSameEntity(ner1, ner2, 3);
+		return isSameEntity(ner1, ner2, 10);
 	}
 
 	/**

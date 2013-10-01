@@ -70,6 +70,16 @@ public class RawEvent {
 	}
 	
 	
-	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		String desc = sentence + "\n";
+		for(NamedEntity ne : entities){
+			desc += ne.entityText + " | ";
+		}
+		desc = desc.substring(0, desc.length() - 3);
+		
+		return desc;
+	}
 
 }

@@ -62,6 +62,17 @@ public class Util {
 		return matchedStrings;
 	}
 	
+	
+	public static void main(String[] args) {
+		
+		String str = "monday mon friday  2007 12";
+		String match = extractStringByRE(str, EventUtil.DAY_REGEX);
+		
+		System.out.println(match);
+		
+	}
+	
+	
 }
 
 

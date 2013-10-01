@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import fiu.kdrg.db.DBConnection;
 import fiu.kdrg.nlp.NLPProcessor;
+import fiu.kdrg.util.EventUtil;
 
 public class EventRecognizer2DB extends EventRecognizer {
 	
@@ -121,33 +122,35 @@ public class EventRecognizer2DB extends EventRecognizer {
 				if(job == null)
 					break;
 				List<RawEvent> rawEvents = processor.processString2RawEvents(job.text);
-				List<Event> events = NLPProcessor.getFinedEvent(rawEvents);
-				synchronized (conn) {
-					try {
-						
-						conn.setAutoCommit(false);
-						PreparedStatement pstm = conn.prepareStatement(INSERT_EVENT_SQL);
-						for(Event event: events){
-							pstm.setInt(1, disasterID);
-							pstm.setString(2, job.url);
-							pstm.setString(3, event.getEventContent());
-							pstm.setDate(4, new Date(event.getEventDate()));
-							pstm.setString(5, event.getEventLocation());
-							pstm.addBatch();
-						}
-						
-						pstm.executeBatch();
-						conn.commit();
-						conn.setAutoCommit(true);
-						
-					} catch (Exception e) {
-						// TODO: handle exception
-						e.printStackTrace();
-						System.err.println("failed to process url: " + job.url);
-					}
-				}
+				EventUtil.displayRawEvents(rawEvents);
+//				List<Event> events = NLPProcessor.getFinedEvent(rawEvents);
+//				synchronized (conn) {
+//					try {
+//						
+//						conn.setAutoCommit(false);
+//						PreparedStatement pstm = conn.prepareStatement(INSERT_EVENT_SQL);
+//						for(Event event: events){
+//							pstm.setInt(1, disasterID);
+//							pstm.setString(2, job.url);
+//							pstm.setString(3, event.getEventContent());
+//							pstm.setDate(4, new Date(event.getEventDate()));
+//							pstm.setString(5, event.getEventLocation());
+//							pstm.addBatch();
+//						}
+//						
+//						pstm.executeBatch();
+//						conn.commit();
+//						conn.setAutoCommit(true);
+//						
+//					} catch (Exception e) {
+//						// TODO: handle exception
+//						e.printStackTrace();
+//						System.err.println("failed to process url: " + job.url);
+//					}
+//				}
 			}
 		}
 	}
+	
 	
 }

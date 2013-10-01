@@ -13,16 +13,11 @@ import fiu.kdrg.storyline.event.RawEvent;
 public class EventUtil {
 
 	
-	public final static String YEAR_REGEX = "\\s+?[0-9]{4}\\s?";
-	
-	public final static String MONTH_REGEX = "[Jj]an(uary)?|[Ff]eb(ruary)?|[Mm]ar(ch)?|[Aa]pr(il)?|[Mm]ay|[Jj]un(e)?|[Jj]ul(y)?|" +
-			"[Aa]ug(ust)?|[Ss]ep(tember)?|[Oo]ct(ober)?|[Nn]ov(ember)?|[Dd]ec(ember)?";
-	
-	public final static String DAY_REGEX = "\\s+?(0?[1-9]|[1-2][0-9]|3[0-1])(st|nd|rd|th)?\\s+?";
-	
-	
-	
-	
+	public final static String YEAR_REGEX = "\\s+[0-9]{4}\\s?";
+	public final static String MONTH_REGEX = "(?i)jan(uary)?|feb(ruary)?|mar(ch)?|apr(il)?|may|jun(e)?|jul(y)?|" +
+			"aug(ust)?|sep(tember)?|oct(ober)?|nov(ember)?|dec(ember)?";
+	public final static String DAY_REGEX = "(?<![0-9])(0?[1-9]|[1-2][0-9]|3[0-1])(st|nd|rd|th)?(?![0-9])";
+	public final static String WEEKDAY_REGEX = "(?i)Mon(day)?|Tue(sday)?|Wen(desday)?|Thu(rsday)?|Fri(day)?|Sat(urday)?|Sun(day)?";
 	
 	public static void displayEvent(Event event)
 	{
