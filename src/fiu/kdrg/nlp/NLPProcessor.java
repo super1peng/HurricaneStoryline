@@ -594,5 +594,8 @@ public class NLPProcessor implements Runnable {
 		return finedEvents;
 
 	}
+	
+	
+	
 
 }
