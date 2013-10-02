@@ -5,13 +5,17 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import fiu.kdrg.db.DBConnection;
+import fiu.kdrg.geocode.Geocoder;
 import fiu.kdrg.nlp.NLPProcessor;
 import fiu.kdrg.util.EventUtil;
 
@@ -38,13 +42,16 @@ public class EventRecognizer2DB extends EventRecognizer {
 		
 		Connection conn = DBConnection.getDisasterConnection();
 		String disaster = "Hurricane Sandy";
-		recognizeEvents(conn, disaster);
+		int disasterID = 3;
+//		recognizeEvents(conn, disaster);
+		fetchEventLatLng(conn,disasterID);
+		
 	}
 	
 	
 	public static String QUERY_NEWS_SQL = "select url, post_date, text from disaster_news " +
 						"where disaster_id = ? and text IS NOT NULL";
-	private static void recognizeEvents(Connection conn, String disaster) 
+	public static void recognizeEvents(Connection conn, String disaster) 
 						throws InterruptedException{
 		
 		Properties props = new Properties();
@@ -157,6 +164,63 @@ public class EventRecognizer2DB extends EventRecognizer {
 			}
 		}
 	}
+	
+	
+	public static String EVENTS_QUERY = "select event_id, location from events where disaster_id = ? and " +
+										"(latitude IS NULL or longtitude IS NULL)";
+	public static String UPDATE_EVENTS_LATLNG = "update events set latitude = ?, longtitude = ? " +
+												"where event_id = ?";
+	public static void fetchEventLatLng(Connection conn, int disaster) {
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		Map<Integer, String> queryInfo = new HashMap<Integer, String>();
+		Map<Integer, LatLng> updateInfo = new HashMap<Integer, LatLng>();
+		
+		try {
+			pstm = conn.prepareStatement(EVENTS_QUERY);
+			pstm.setInt(1, disaster);
+			rs = pstm.executeQuery();
+			while(rs.next()) {
+				queryInfo.put(rs.getInt(1), rs.getString(2));
+			}
+
+			Geocoder geoCoder = new Geocoder();
+			for(int key : queryInfo.keySet()) {
+				LatLng tmpLat = geoCoder.getLatLng(queryInfo.get(key));
+				if(tmpLat != null)
+					updateInfo.put(key, tmpLat);
+			}
+			
+			conn.setAutoCommit(false);
+			pstm = conn.prepareStatement(UPDATE_EVENTS_LATLNG);
+			LatLng latLng = null;
+			int count = 0;
+			for(int key: updateInfo.keySet()) {
+				latLng = updateInfo.get(key);
+				pstm.setFloat(1,latLng.getLatitude());
+				pstm.setFloat(2, latLng.getLongtitude());
+				pstm.setInt(3, key);
+				pstm.addBatch();
+				count ++;
+				
+				if ((count+1) % 200 == 0) {
+					pstm.executeBatch();
+					conn.commit();
+				}
+			}
+			
+			pstm.executeBatch();
+			conn.commit();
+			conn.setAutoCommit(false);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
 	
 	
 }
