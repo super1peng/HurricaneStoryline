@@ -2,12 +2,18 @@ package fiu.kdrg.nlp;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import fiu.kdrg.storyline.event.Event;
 import fiu.kdrg.storyline.event.NamedEntity;
 import fiu.kdrg.storyline.event.RawEvent;
+import fiu.kdrg.util.DatePicker;
 import fiu.kdrg.util.EventUtil;
 import fiu.kdrg.util.Util;
 
@@ -281,7 +287,7 @@ public class NLPProcessor implements Runnable {
 						// See whether previous entity and current entity are
 						// the same entity
 						if (isSameEntity(previousEntity, new NamedEntity(type,
-								entityText, beginPosition))) {
+								entityText, beginPosition), 4)) {
 							rawEvent.getEntities()
 									.get(rawEvent.getEntities().size() - 1)
 									.setEntityText(
@@ -308,7 +314,7 @@ public class NLPProcessor implements Runnable {
 						// See whether previous entity and current entity are
 						// the same entity
 						if (isSameEntity(previousEntity, new NamedEntity(type,
-								entityText, beginPosition))) {
+								entityText, beginPosition), 10)) {
 							rawEvent.getEntities()
 									.get(rawEvent.getEntities().size() - 1)
 									.setEntityText(
@@ -516,13 +522,83 @@ public class NLPProcessor implements Runnable {
 	static public List<Event> getFinedEvent(List<RawEvent> events) {
 
 		// events = modifyAmbiguousRawEventMatch(events);
-
 		List<Event> finedEvents = new ArrayList<Event>();
 
 		if (null == events || events.isEmpty())
 			return finedEvents;
-
 		
+		for (int i = 0; i < events.size(); i++) {
+			RawEvent tmpRawEvent = events.get(i);
+			List<NamedEntity> tmpEntities = tmpRawEvent.getEntities();
+			
+			String eventContent = tmpRawEvent.getSentence();
+			String eventLocation = "";
+			String eventDate = "";
+			String eventURL = "https://www.google.com";
+			String tmpY = null,tmpM = null,tmpD = null;
+
+			for (int j = 0; j < tmpEntities.size(); j++) {
+				String enTxt = tmpEntities.get(j).getEntityText();
+				if (tmpEntities.get(j).getType()
+						.equals(NamedEntity.DATE_ENTITY)) {
+					// test if it contains year, month, day
+					if(null == tmpM)
+						tmpM = Util.extractStringByRE(enTxt, EventUtil.MONTH_REGEX);
+
+					if(null == tmpD)
+						tmpD = Util.extractStringByRE(enTxt, EventUtil.DAY_REGEX);
+
+					if(null == tmpY)
+						tmpY = Util.extractStringByRE(enTxt, EventUtil.YEAR_REGEX);
+				}
+
+				if (tmpEntities.get(j).getType()
+						.equals(NamedEntity.LOCATION_ENTITY))
+					eventLocation += " | " + enTxt;
+			}
+			if (eventLocation.length() > 0)
+				eventLocation = eventLocation.substring(3);
+			
+			if(null != tmpM && null != tmpD && null != tmpY)	{
+				eventDate = tmpM + " " + tmpD + ", " + tmpY;
+				if (eventLocation.length() > 0) {
+					Long tmpEventDate;
+					try {
+						tmpEventDate = Util.parseDate2Milionseconds(eventDate);
+
+						finedEvents.add(new Event(eventURL, eventContent,
+								eventLocation, tmpEventDate));
+
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+		return finedEvents;
+
+	}
+	
+	
+	
+	static public List<Event> getFinedEvent(List<RawEvent> events, String date) {
+
+		// events = modifyAmbiguousRawEventMatch(events);
+		List<Event> finedEvents = new ArrayList<Event>();
+		if (null == events || events.isEmpty())
+			return finedEvents;
+
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
+		LocalDate ld = null;
+		try {
+			ld = formatter.parseLocalDate(date);
+			if(ld == null)
+				return getFinedEvent(events); //still using original function
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 
 		for (int i = 0; i < events.size(); i++) {
 			RawEvent tmpRawEvent = events.get(i);
@@ -532,70 +608,75 @@ public class NLPProcessor implements Runnable {
 			String eventLocation = "";
 			String eventDate = "";
 			String eventURL = "https://www.google.com";
-			String tmp;
-			boolean flag = true;
+			String tmpY = null,tmpM = null,tmpD = null, tmpW = null;
 
-			flag = true;// reset
+			boolean dateFlag = false;
 			for (int j = 0; j < tmpEntities.size(); j++) {
+				String enTxt = tmpEntities.get(j).getEntityText();
 				if (tmpEntities.get(j).getType()
 						.equals(NamedEntity.DATE_ENTITY)) {
+					dateFlag = true;
 					// test if it contains year, month, day
-					tmp = Util.extractStringByRE(tmpEntities.get(j)
-							.getEntityText(), EventUtil.MONTH_REGEX);
-					if (null == tmp) {
-						flag = false;
-						break;
-					} else {
-						eventDate = tmp;
-					}
+					if(null == tmpM)
+						tmpM = Util.extractStringByRE(enTxt, EventUtil.MONTH_REGEX);
 
-					tmp = Util.extractStringByRE(tmpEntities.get(j)
-							.getEntityText(), EventUtil.DAY_REGEX);
-					if (null == tmp) {
-						flag = false;
-						break;
-					} else {
-						eventDate = eventDate + " " + tmp;
-					}
-
-					tmp = Util.extractStringByRE(tmpEntities.get(j)
-							.getEntityText(), EventUtil.YEAR_REGEX);
-					if (null == tmp) {
-						flag = false;
-						break;
-					} else {
-						eventDate = eventDate + ", " + tmp;
-					}
-
+					if(null == tmpD)
+						tmpD = Util.extractStringByRE(enTxt, EventUtil.DAY_REGEX);
+					
+					if(null == tmpY)
+						tmpY = Util.extractStringByRE(enTxt, EventUtil.YEAR_REGEX);
+					
+					if(null == tmpW)
+						tmpW = Util.extractStringByRE(enTxt, EventUtil.WEEKDAY_REGEX);
 				}
 
 				if (tmpEntities.get(j).getType()
 						.equals(NamedEntity.LOCATION_ENTITY))
-					eventLocation += " | " + tmpEntities.get(j).getEntityText();
+					eventLocation += " | " + enTxt;
 			}
 			if (eventLocation.length() > 0)
 				eventLocation = eventLocation.substring(3);
-
-			if (flag && eventLocation.length() > 0) {
+			
+			String tmpYb = tmpY,tmpMb = tmpM,tmpDb = tmpD;
+			LocalDate tmpld = null;
+			
+			//try to make following four situations survive
+			//only year is missing
+			if(null == tmpY && null != tmpM && null != tmpD) {
+				tmpYb = ld.getYear() + "";
+			} else if(null != tmpY && null != tmpM && null == tmpD) { 
+				//only day is missing
+				tmpDb = ld.getDayOfMonth() + "";
+			} else if( !(null != tmpY && null != tmpM && null != tmpD) && tmpW != null) {
+				//something is missing, but week day given
+				tmpld= DatePicker.getNearestDayOfWeekBefore(ld, tmpW);
+				tmpYb = tmpld.getYear() + "";
+				tmpMb = EventUtil.MONTH_MAPPER[tmpld.getMonthOfYear() - 1];
+				tmpDb = tmpld.getDayOfMonth() + "";
+			} else if (null == tmpY && null == tmpM && null == tmpD && null == tmpW && dateFlag) {
+				//everything is missing, but do have some date entity,make some random guess around publish date
+				int guess = (int) (1 + Math.random() * 7);
+				tmpld = DatePicker.getNearestDayOfWeekBefore(ld, guess);
+				tmpYb = tmpld.getYear() + "";
+				tmpMb = EventUtil.MONTH_MAPPER[tmpld.getMonthOfYear() - 1];
+				tmpDb = tmpld.getDayOfMonth() + "";
+			}
+			
+			if (null != tmpYb && null != tmpMb && null != tmpDb && eventLocation.length() > 0) {
 				Long tmpEventDate;
+				eventDate = tmpMb + " " + tmpDb + ", " + tmpYb;
 				try {
 					tmpEventDate = Util.parseDate2Milionseconds(eventDate);
-
-					finedEvents.add(new Event(eventURL, eventContent,
-							eventLocation, tmpEventDate));
-
-				} catch (ParseException e) {
+						finedEvents.add(new Event(eventURL, eventContent,
+										eventLocation, tmpEventDate));
+					} catch (ParseException e) {
 					e.printStackTrace();
 				}
 			}
-
 		}
-
 		return finedEvents;
 
 	}
-	
-	
 	
 
 }

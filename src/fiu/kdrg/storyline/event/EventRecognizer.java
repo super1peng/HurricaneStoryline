@@ -16,6 +16,12 @@ class TextJob {
 		this.url = url;
 		this.text = text;
 	}
+	
+	public TextJob(String url, String text, String date){
+		this(url,text);
+		this.date = date;
+	}
+	
 	String url;
 	String text;
 	String date;

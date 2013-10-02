@@ -113,7 +113,7 @@ public class BingNewsCrawler {
 			pstm.setInt(1, disaster_id);
 			pstm.setString(2, aNews.getTitle());
 			pstm.setString(3, aNews.getAuthors());
-			pstm.setString(4, aNews.getAuthors());
+			pstm.setString(4, aNews.getPublisher());
 			pstm.setString(5,aNews.getDateTime());
 			pstm.setString(6, aNews.getUrl());
 			pstm.setString(7, aNews.getHtml());

@@ -7,6 +7,11 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 
 
 public class Util {
@@ -65,11 +70,20 @@ public class Util {
 	
 	public static void main(String[] args) {
 		
-		String str = "monday mon friday  2007 12";
-		String match = extractStringByRE(str, EventUtil.DAY_REGEX);
+		String str = "friday mon friday 2007 12";
+		String match = extractStringByRE(str, EventUtil.WEEKDAY_REGEX);
 		
 		System.out.println(match);
 		
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
+		LocalDate ld = null;
+		
+		try	{
+			ld = formatter.parseLocalDate("26/08/2012");
+		}catch(IllegalArgumentException ex) {
+			
+		}
+		System.out.println(ld.getMonthOfYear());
 	}
 	
 	

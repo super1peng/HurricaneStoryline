@@ -42,7 +42,7 @@ public class EventRecognizer2DB extends EventRecognizer {
 	}
 	
 	
-	public static String QUERY_NEWS_SQL = "select url , text from disaster_news " +
+	public static String QUERY_NEWS_SQL = "select url, post_date, text from disaster_news " +
 						"where disaster_id = ? and text IS NOT NULL";
 	private static void recognizeEvents(Connection conn, String disaster) 
 						throws InterruptedException{
@@ -68,8 +68,9 @@ public class EventRecognizer2DB extends EventRecognizer {
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()){
 				String url = rs.getString(1);
-				String text = rs.getString(2);
-				TextJob job = new TextJob(url, text);
+				String date = rs.getString(2);
+				String text = rs.getString(3);
+				TextJob job = new TextJob(url, text, date);
 				jobList.putItem(job);
 			}
 		} catch (SQLException e) {
@@ -121,9 +122,10 @@ public class EventRecognizer2DB extends EventRecognizer {
 				
 				if(job == null)
 					break;
+				
 				List<RawEvent> rawEvents = processor.processString2RawEvents(job.text);
 				EventUtil.displayRawEvents(rawEvents);
-//				List<Event> events = NLPProcessor.getFinedEvent(rawEvents);
+				List<Event> events = NLPProcessor.getFinedEvent(rawEvents, job.date);
 //				synchronized (conn) {
 //					try {
 //						
