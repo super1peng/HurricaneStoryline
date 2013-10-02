@@ -20,6 +20,7 @@ public class EventRecognizer2DB extends EventRecognizer {
 	private Connection conn;
 	private String disaster;
 	private int disasterID;
+	private static Integer COUNTER = 0;
 	
 	public EventRecognizer2DB(Properties props, JobList jobList,
 							Connection conn, String disaster) {
@@ -36,9 +37,8 @@ public class EventRecognizer2DB extends EventRecognizer {
 	public static void main(String[] args) throws InterruptedException {
 		
 		Connection conn = DBConnection.getDisasterConnection();
-		String disaster = "Hurricane Irene";
+		String disaster = "Hurricane Sandy";
 		recognizeEvents(conn, disaster);
-		
 	}
 	
 	
@@ -83,6 +83,7 @@ public class EventRecognizer2DB extends EventRecognizer {
 		}
 		
 		executor.awaitTermination(1000, TimeUnit.DAYS);
+		System.out.println("Totally count: " + COUNTER);
 		
 	}
 	
@@ -124,32 +125,35 @@ public class EventRecognizer2DB extends EventRecognizer {
 					break;
 				
 				List<RawEvent> rawEvents = processor.processString2RawEvents(job.text);
-				EventUtil.displayRawEvents(rawEvents);
+//				EventUtil.displayRawEvents(rawEvents);
 				List<Event> events = NLPProcessor.getFinedEvent(rawEvents, job.date);
-//				synchronized (conn) {
-//					try {
-//						
-//						conn.setAutoCommit(false);
-//						PreparedStatement pstm = conn.prepareStatement(INSERT_EVENT_SQL);
-//						for(Event event: events){
-//							pstm.setInt(1, disasterID);
-//							pstm.setString(2, job.url);
-//							pstm.setString(3, event.getEventContent());
-//							pstm.setDate(4, new Date(event.getEventDate()));
-//							pstm.setString(5, event.getEventLocation());
-//							pstm.addBatch();
-//						}
-//						
-//						pstm.executeBatch();
-//						conn.commit();
-//						conn.setAutoCommit(true);
-//						
-//					} catch (Exception e) {
-//						// TODO: handle exception
-//						e.printStackTrace();
-//						System.err.println("failed to process url: " + job.url);
-//					}
-//				}
+				synchronized (COUNTER) {
+					COUNTER += events.size();
+				}
+				synchronized (conn) {
+					try {
+						
+						conn.setAutoCommit(false);
+						PreparedStatement pstm = conn.prepareStatement(INSERT_EVENT_SQL);
+						for(Event event: events){
+							pstm.setInt(1, disasterID);
+							pstm.setString(2, job.url);
+							pstm.setString(3, event.getEventContent());
+							pstm.setDate(4, new Date(event.getEventDate()));
+							pstm.setString(5, event.getEventLocation());
+							pstm.addBatch();
+						}
+						
+						pstm.executeBatch();
+						conn.commit();
+						conn.setAutoCommit(true);
+						
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+						System.err.println("failed to process url: " + job.url);
+					}
+				}
 			}
 		}
 	}

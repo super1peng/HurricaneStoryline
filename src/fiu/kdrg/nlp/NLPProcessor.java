@@ -593,12 +593,12 @@ public class NLPProcessor implements Runnable {
 		LocalDate ld = null;
 		try {
 			ld = formatter.parseLocalDate(date);
-			if(ld == null)
-				return getFinedEvent(events); //still using original function
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+		if(ld == null)
+			return getFinedEvent(events); //still using original function
 
 		for (int i = 0; i < events.size(); i++) {
 			RawEvent tmpRawEvent = events.get(i);
@@ -634,43 +634,44 @@ public class NLPProcessor implements Runnable {
 						.equals(NamedEntity.LOCATION_ENTITY))
 					eventLocation += " | " + enTxt;
 			}
-			if (eventLocation.length() > 0)
+			if (eventLocation.length() > 0) {
 				eventLocation = eventLocation.substring(3);
 			
-			String tmpYb = tmpY,tmpMb = tmpM,tmpDb = tmpD;
-			LocalDate tmpld = null;
+				String tmpYb = tmpY,tmpMb = tmpM,tmpDb = tmpD;
+				LocalDate tmpld = null;
 			
-			//try to make following four situations survive
-			//only year is missing
-			if(null == tmpY && null != tmpM && null != tmpD) {
-				tmpYb = ld.getYear() + "";
-			} else if(null != tmpY && null != tmpM && null == tmpD) { 
-				//only day is missing
-				tmpDb = ld.getDayOfMonth() + "";
-			} else if( !(null != tmpY && null != tmpM && null != tmpD) && tmpW != null) {
-				//something is missing, but week day given
-				tmpld= DatePicker.getNearestDayOfWeekBefore(ld, tmpW);
-				tmpYb = tmpld.getYear() + "";
-				tmpMb = EventUtil.MONTH_MAPPER[tmpld.getMonthOfYear() - 1];
-				tmpDb = tmpld.getDayOfMonth() + "";
-			} else if (null == tmpY && null == tmpM && null == tmpD && null == tmpW && dateFlag) {
-				//everything is missing, but do have some date entity,make some random guess around publish date
-				int guess = (int) (1 + Math.random() * 7);
-				tmpld = DatePicker.getNearestDayOfWeekBefore(ld, guess);
-				tmpYb = tmpld.getYear() + "";
-				tmpMb = EventUtil.MONTH_MAPPER[tmpld.getMonthOfYear() - 1];
-				tmpDb = tmpld.getDayOfMonth() + "";
-			}
-			
-			if (null != tmpYb && null != tmpMb && null != tmpDb && eventLocation.length() > 0) {
-				Long tmpEventDate;
-				eventDate = tmpMb + " " + tmpDb + ", " + tmpYb;
-				try {
-					tmpEventDate = Util.parseDate2Milionseconds(eventDate);
-						finedEvents.add(new Event(eventURL, eventContent,
-										eventLocation, tmpEventDate));
+				//try to make following four situations survive
+				//only year is missing
+				if(null == tmpY && null != tmpM && null != tmpD) {
+					tmpYb = ld.getYear() + "";
+				} else if(null != tmpY && null != tmpM && null != tmpW && null == tmpD) { 
+					//only day is missing
+					tmpDb = ld.getDayOfMonth() + "";
+				} else if( !(null != tmpY && null != tmpM && null != tmpD) && tmpW != null) {
+					//something is missing, but week day given
+					tmpld= DatePicker.getNearestDayOfWeekBefore(ld, tmpW);
+					tmpYb = tmpld.getYear() + "";
+					tmpMb = EventUtil.MONTH_MAPPER[tmpld.getMonthOfYear() - 1];
+					tmpDb = tmpld.getDayOfMonth() + "";
+				} else if (null == tmpY && null == tmpM && null == tmpD && null == tmpW && dateFlag) {
+					//everything is missing, but do have some date entity,make some random guess before publish date
+					int guess = (int) (1 + Math.random() * 7);
+					tmpld = DatePicker.getNearestDayOfWeekBefore(ld, guess);
+					tmpYb = tmpld.getYear() + "";
+					tmpMb = EventUtil.MONTH_MAPPER[tmpld.getMonthOfYear() - 1];
+					tmpDb = tmpld.getDayOfMonth() + "";
+				}
+				
+				if (null != tmpYb && null != tmpMb && null != tmpDb && eventLocation.length() > 0) {
+					Long tmpEventDate;
+					eventDate = tmpMb + " " + tmpDb + ", " + tmpYb;
+					try {
+						tmpEventDate = Util.parseDate2Milionseconds(eventDate);
+							finedEvents.add(new Event(eventURL, eventContent,
+									eventLocation, tmpEventDate));
 					} catch (ParseException e) {
-					e.printStackTrace();
+						e.printStackTrace();
+					}
 				}
 			}
 		}

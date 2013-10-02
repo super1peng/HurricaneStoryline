@@ -16,7 +16,7 @@ public class EventUtil {
 	public final static String YEAR_REGEX = "(?<![0-9])[0-9]{4}(?![0-9])";
 	public final static String MONTH_REGEX = "(?i)jan(uary)?|feb(ruary)?|mar(ch)?|apr(il)?|may|jun(e)?|jul(y)?|" +
 			"aug(ust)?|sep(tember)?|oct(ober)?|nov(ember)?|dec(ember)?";
-	public final static String DAY_REGEX = "(?<![0-9])(0?[1-9]|[1-2][0-9]|3[0-1])(st|nd|rd|th)?(?![0-9])";
+	public final static String DAY_REGEX = "(?<![0-9])(0?[1-9]|[1-2][0-9]|3[0-1])(?![0-9])";
 	public final static String WEEKDAY_REGEX = "(?i)Mon(day)?|Tue(sday)?|Wen(desday)?|Thu(rsday)?|Fri(day)?|Sat(urday)?|Sun(day)?";
 	public final static String[] MONTH_MAPPER = {"jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"};
 	
@@ -24,11 +24,12 @@ public class EventUtil {
 	{
 		if(null == event)
 			return;
-		System.out.println(event.getEventURL());
-		System.out.println(event.getEventContent());
-		System.out.println("Location: " + event.getEventLocation() +"\t Date: " + event.getEventDate());
+		System.out.print(event.getEventURL() + "\t");
+		System.out.print(event.getEventContent() + "\t");
+		System.out.print(event.getEventLocation() +"\t" + event.getEventDate());
 		if(null != event.getLatlng())
-			System.out.println("Latlng: " + event.getLatlng().getLatitude() + "," + event.getLatlng().getLongtitude());
+			System.out.print("\t" + event.getLatlng().getLatitude() + "\t" + event.getLatlng().getLongtitude());
+		System.out.println();
 	}
 	
 	
