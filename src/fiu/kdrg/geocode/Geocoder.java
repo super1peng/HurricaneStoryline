@@ -197,7 +197,7 @@ public class Geocoder {
 
 	public static void main(String[] args) throws Exception {
 		Geocoder geocoder = Geocoder.getGeocoder();
-		LatLng latlng = geocoder.getLatLng("New York City | Queens | New York");
+		LatLng latlng = geocoder.getLatLng("East Coast | North Carolina | Mid-Atlantic | New England");
 		if (latlng != null) {
 			System.out.println(latlng.getLatitude());
 			System.out.println(latlng.getLongtitude());

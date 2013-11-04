@@ -1,6 +1,10 @@
 package fiu.kdrg.storyline;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -62,6 +66,42 @@ public class StorylineGen {
 		br.close();
 		System.err.println("load " + events.size() + " events");
 	}
+	
+	
+	public static String DISASTER_QUERY = "select id from disasters where name = ?";
+	public static String EVENTS_QUERY = "select url, content, event_date, location, latitude, longtitude " +
+										"where disaster_id = ? and event_date >= ? and event_date <= ?";
+	public void loadEvents(Connection conn, String disaster, String from, String to) {
+		
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		int disaster_id = -1;
+		
+		try {
+			pstm = conn.prepareStatement(DISASTER_QUERY);
+			pstm.setString(1, disaster);
+			rs = pstm.executeQuery();
+			if(rs.next()) {
+				disaster_id = rs.getInt(1);
+			} else {
+				return;
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
+	
+	
+	
+	
 	
 	public void genStoryline() {
 		

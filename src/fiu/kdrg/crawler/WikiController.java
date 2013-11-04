@@ -72,4 +72,5 @@ public class WikiController {
         controller.start(WikiCrawler.class, numberOfCrawlers);    
 	}
 	
+	
 }

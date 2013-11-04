@@ -16,8 +16,15 @@ class TextJob {
 		this.url = url;
 		this.text = text;
 	}
+	
+	public TextJob(String url, String text, String date){
+		this(url,text);
+		this.date = date;
+	}
+	
 	String url;
 	String text;
+	String date;
 }
 
 class JobList {
@@ -108,6 +115,10 @@ public class EventRecognizer implements Runnable {
 		processor = new NLPProcessor(props);
 		this.pw = pw;
 		this.jobList = jobList;
+	}
+	
+	public EventRecognizer() {
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
