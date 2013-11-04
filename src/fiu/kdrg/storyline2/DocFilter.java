@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.jblas.DoubleMatrix;
 
-import fiu.kdrg.storyline.StorylineGen;
 import fiu.kdrg.storyline.event.Event;
 import fiu.kdrg.storyline.event.SerializeFactory;
 import fiu.kdrg.util.EventUtil;

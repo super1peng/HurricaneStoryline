@@ -1,0 +1,25 @@
+
+StoryTeller：
+	输入：经过domnate计算的set.
+	输出：经过linear programming得到的storyline
+	
+DocFilter
+	输入：一定条件筛选得到的事件
+	输出：domnate set
+	
+BingNewsCrawler
+	输入：关键词（Hurricane Irene）
+	输出：存入数据库的BingSearchNews
+
+EventRecognizer2DB
+	输入：disaster ID
+	输出：从与之相关的news抽出所有事件
+	
+SerializeFactory:
+	功能：序列化与反序列化
+	
+DBConnection:
+	得到想要的数据库数据
+	
+EventLoader
+	从数据库load想要的事件

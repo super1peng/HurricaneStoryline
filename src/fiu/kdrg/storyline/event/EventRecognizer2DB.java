@@ -42,7 +42,7 @@ public class EventRecognizer2DB extends EventRecognizer {
 		
 		Connection conn = DBConnection.getDisasterConnection();
 		String disaster = "Hurricane Sandy";
-		int disasterID = 3;
+		int disasterID = 1;
 //		recognizeEvents(conn, disaster);
 		fetchEventLatLng(conn,disasterID);
 		
