@@ -40,30 +40,31 @@ public class LoadFinalEventServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+
 		String fileName = request.getParameter("fileName");
-		
+
 		ArrayList<Event> filterEvents = null;
 		try {
-			filterEvents = (ArrayList<Event>) SerializeFactory.deSerialize(Util.rootDir + fileName);//finalresult
+			filterEvents = (ArrayList<Event>) SerializeFactory
+					.deSerialize(Util.rootDir + fileName);// finalresult
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		Gson gson = new Gson();
 		JsonObject ret = new JsonObject();
 		JsonElement storylineJson = gson.toJsonTree(filterEvents);
-		
+
 		ret.add("events", storylineJson);
-		
-	    response.setContentType("application/json; Charset-utf-8");
-	    response.setHeader("pragma", "no-cache");
-	    response.setHeader("cache-control", "no-cache");
-	    
-	    JsonWriter jw = new JsonWriter(response.getWriter());
-	    gson.toJson(ret, jw);
-	    jw.flush();
+
+		response.setContentType("application/json; Charset-utf-8");
+		response.setHeader("pragma", "no-cache");
+		response.setHeader("cache-control", "no-cache");
+
+		JsonWriter jw = new JsonWriter(response.getWriter());
+		gson.toJson(ret, jw);
+		jw.flush();
 	}
 
 	/**

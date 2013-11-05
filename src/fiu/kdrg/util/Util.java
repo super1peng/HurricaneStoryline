@@ -17,7 +17,8 @@ import org.joda.time.format.DateTimeFormatter;
 public class Util {
 	
 	
-	public static String rootDir = "/home/zhouwubai/U/workplace/HurricaneStoryline/events/";
+//	public static String rootDir = "/home/zhouwubai/U/workplace/HurricaneStoryline/events/";
+	public static String rootDir = "/home/users/wzhou005/workspace/HurricaneStoryline/events/";
 	
     /**
      * change Date format Aug 12, 2005 to millionseconds

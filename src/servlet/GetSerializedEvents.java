@@ -28,19 +28,21 @@ import fiu.kdrg.util.Util;
 @WebServlet("/GetSerializedEvents")
 public class GetSerializedEvents extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GetSerializedEvents() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public GetSerializedEvents() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String path = Util.rootDir + "events/storyline.out1";
 		List<Event> eventArray = null;
@@ -50,28 +52,28 @@ public class GetSerializedEvents extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		try {
 			Gson gson = new Gson();
 			JsonObject ret = new JsonObject();
 			JsonElement allEventsJson = gson.toJsonTree(eventArray);
 			ret.add("allevents", allEventsJson);
-			
-			List<Event> storyline = new ArrayList<Event>(); //it is empty anyway
-			
+
+			List<Event> storyline = new ArrayList<Event>(); // it is empty
+															// anyway
+
 			JsonElement storylineJson = gson.toJsonTree(storyline);
-			
+
 			ret.add("storyline", storylineJson);
-			
-		    response.setContentType("application/json; Charset-utf-8");
-		    response.setHeader("pragma", "no-cache");
-		    response.setHeader("cache-control", "no-cache");
-		    
-		    JsonWriter jw = new JsonWriter(response.getWriter());
-		    gson.toJson(ret, jw);
-		    jw.flush();
-	    
-	    
+
+			response.setContentType("application/json; Charset-utf-8");
+			response.setHeader("pragma", "no-cache");
+			response.setHeader("cache-control", "no-cache");
+
+			JsonWriter jw = new JsonWriter(response.getWriter());
+			gson.toJson(ret, jw);
+			jw.flush();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,9 +81,11 @@ public class GetSerializedEvents extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
 

@@ -104,21 +104,26 @@ public class DocFilter {
 
 	public static void main(String[] args) {
 		
-		DocFilter filter = new DocFilter(StoryUtil.loadAllEvents());
+		DocFilter filter = new DocFilter(
+				EventLoader.loadEventByDisaster(1, "2005-01-01","2006-01-01"));
+		
 		filter.setMiniSim(0.5);
 		filter.setMaxDist(3);
 		ArrayList<Event> filteredEvents = filter.filter(200);
 		
+		System.out.println(filteredEvents.size());
+		
 		try {
-			SerializeFactory.serialize(Util.rootDir + "filterEvents.out", filteredEvents);
+			SerializeFactory.serialize(Util.rootDir + "filterEvents1.out", filteredEvents);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		ArrayList<Event> filterEvents = null;
 		
 		try {
-			filterEvents = (ArrayList<Event>) SerializeFactory.deSerialize(Util.rootDir + "filterEvents.out");
+			filterEvents = (ArrayList<Event>) SerializeFactory.deSerialize(Util.rootDir + "filterEvents1.out");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

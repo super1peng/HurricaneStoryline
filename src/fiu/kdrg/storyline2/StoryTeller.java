@@ -277,22 +277,29 @@ public class StoryTeller {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
+		int disaster_id = 3;
+//		DocFilter filter = new DocFilter(
+//				EventLoader.loadEventByDisaster(disaster_id, "2005-01-01","2006-01-01"));
+//		DocFilter filter = new DocFilter(
+//				EventLoader.loadEventByDisaster(disaster_id, "2012-01-01","2014-01-01"));
 		DocFilter filter = new DocFilter(
-				EventLoader.loadEventByDisaster(1, "2005-01-01","2006-01-01"));
+				EventLoader.loadEventByDisaster(disaster_id, "2011-01-01","2012-01-01"));
 		
 		filter.setMiniSim(0.5);
-		filter.setMaxDist(3);
-		ArrayList<Event> filteredEvents = filter.filter(200);
+		filter.setMaxDist(4);
+		ArrayList<Event> filteredEvents = filter.filter(120);
+		
+		System.out.println(filteredEvents.size());
 		
 		try {
-			SerializeFactory.serialize(Util.rootDir + "filterEvents.out", filteredEvents);
+			SerializeFactory.serialize(Util.rootDir + "filterEvents"+disaster_id+".out", filteredEvents);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		StoryTeller storyTeller = new StoryTeller(filteredEvents);
-		storyTeller.setEdgeRange(5, 20);
+		storyTeller.setEdgeRange(10, 20);
 		storyTeller.setRadius(2);
 		storyTeller.setEdgeW(0.001);
 //		EventUtil.displayEvents(storyTeller.events);
@@ -314,7 +321,7 @@ public class StoryTeller {
 		try {
 			storyTeller.genStoryline();
 			EventUtil.displayEvents(storyTeller.storyline);
-			SerializeFactory.serialize(Util.rootDir + "finalResult.out", storyTeller.domEvents);
+			SerializeFactory.serialize(Util.rootDir + "finalResult"+disaster_id+".out", storyTeller.domEvents);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
