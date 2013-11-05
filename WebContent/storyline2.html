@@ -94,7 +94,7 @@
 			function loadFinalEvents(){
 				
 				
-				$.get("LoadFinalEventServlet",{fileName:"allEvents1.out"},function(rtnData){
+				$.get("LoadFinalEventServlet",{fileName:"allEvents2.out"},function(rtnData){
 					var events = rtnData.events;
 					testData = events;
 					mapUtil.setAllEvents(events);
@@ -103,7 +103,7 @@
 					});
 				});
 				
-				$.get("LoadFinalEventServlet",{fileName:"finalResult1.out"},function(rtnData){
+				$.get("LoadFinalEventServlet",{fileName:"finalResult2.out"},function(rtnData){
 					
 					var events = rtnData.events;
 					mapUtil.setEvents(events);
