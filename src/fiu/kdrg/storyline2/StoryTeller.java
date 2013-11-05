@@ -277,14 +277,28 @@ public class StoryTeller {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
-		int disaster_id = 3;
-//		DocFilter filter = new DocFilter(
-//				EventLoader.loadEventByDisaster(disaster_id, "2005-01-01","2006-01-01"));
-//		DocFilter filter = new DocFilter(
-//				EventLoader.loadEventByDisaster(disaster_id, "2012-01-01","2014-01-01"));
-		DocFilter filter = new DocFilter(
-				EventLoader.loadEventByDisaster(disaster_id, "2011-01-01","2012-01-01"));
+		int disaster_id = 2;
+		DocFilter filter = null;
+		ArrayList<Event> allEvents = null;
 		
+		switch (disaster_id) {
+		case 1:
+			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2005-01-01","2006-01-01");
+			break;
+		case 2:
+			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2012-01-01","2014-01-01");
+			break;
+		case 3:
+			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2011-01-01","2012-01-01");
+			break;
+		default:
+			break;
+		}
+//		DocFilter filter = new DocFilter(EventLoader.loadEventByDisaster(disaster_id, "2005-01-01","2006-01-01"));
+//		DocFilter filter = new DocFilter(EventLoader.loadEventByDisaster(disaster_id, "2012-01-01","2014-01-01"));
+//		DocFilter filter = new DocFilter(EventLoader.loadEventByDisaster(disaster_id, "2011-01-01","2012-01-01"));
+		
+		filter = new DocFilter(allEvents);
 		filter.setMiniSim(0.5);
 		filter.setMaxDist(4);
 		ArrayList<Event> filteredEvents = filter.filter(120);
@@ -292,6 +306,7 @@ public class StoryTeller {
 		System.out.println(filteredEvents.size());
 		
 		try {
+			SerializeFactory.serialize(Util.rootDir + "allEvents"+disaster_id+".out", allEvents);
 			SerializeFactory.serialize(Util.rootDir + "filterEvents"+disaster_id+".out", filteredEvents);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -299,7 +314,7 @@ public class StoryTeller {
 		}
 		
 		StoryTeller storyTeller = new StoryTeller(filteredEvents);
-		storyTeller.setEdgeRange(10, 20);
+		storyTeller.setEdgeRange(6, 10);
 		storyTeller.setRadius(2);
 		storyTeller.setEdgeW(0.001);
 //		EventUtil.displayEvents(storyTeller.events);
