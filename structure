@@ -1,5 +1,5 @@
 
-StoryTeller：
+StoryTeller：(contain main test entry)
 	输入：经过domnate计算的set.
 	输出：经过linear programming得到的storyline
 	
@@ -23,3 +23,4 @@ DBConnection:
 	
 EventLoader
 	从数据库load想要的事件
+	

@@ -20,7 +20,7 @@ public class DocFilter {
 	public DocFilter(List<Event> events) {
 		// TODO Auto-generated constructor stub
 		this.events = events;
-		setEventID();
+//		setEventID();
 		
 		miniSim = 0.5;
 		maxDist = 5;
@@ -94,12 +94,12 @@ public class DocFilter {
 	/**
 	 * set id for events, after this, all events will identifies by its id.
 	 */
-	private void setEventID()
-	{
-		for(int id = 0; id < events.size(); id++){
-			events.get(id).setId(id);
-		}
-	}
+//	private void setEventID()
+//	{
+//		for(int id = 0; id < events.size(); id++){
+//			events.get(id).setId(id);
+//		}
+//	}
 
 
 	public static void main(String[] args) {
