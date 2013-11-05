@@ -6,6 +6,7 @@ import ilog.concert.IloIntVar;
 import ilog.concert.IloNumVar;
 import ilog.cplex.IloCplex;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -276,16 +277,21 @@ public class StoryTeller {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
-		ArrayList<Event> filterEvents = null;
+		DocFilter filter = new DocFilter(
+				EventLoader.loadEventByDisaster(1, "2005-01-01","2006-01-01"));
+		
+		filter.setMiniSim(0.5);
+		filter.setMaxDist(3);
+		ArrayList<Event> filteredEvents = filter.filter(200);
+		
 		try {
-			filterEvents = (ArrayList<Event>) SerializeFactory.deSerialize(Util.rootDir + "filterEvents.out");
-		} catch (Exception e) {
+			SerializeFactory.serialize(Util.rootDir + "filterEvents.out", filteredEvents);
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
-		StoryTeller storyTeller = new StoryTeller(filterEvents);
+		StoryTeller storyTeller = new StoryTeller(filteredEvents);
 		storyTeller.setEdgeRange(5, 20);
 		storyTeller.setRadius(2);
 		storyTeller.setEdgeW(0.001);

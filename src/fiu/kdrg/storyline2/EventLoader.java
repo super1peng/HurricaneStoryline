@@ -33,6 +33,7 @@ public class EventLoader {
 			while(rs.next()) {
 				
 				Event event = new Event();
+				event.setId(rs.getInt("event_id"));
 				event.setEventContent(rs.getString("content"));
 				event.setEventURL(rs.getString("url"));
 				event.setEventDate(rs.getLong("event_date"));
