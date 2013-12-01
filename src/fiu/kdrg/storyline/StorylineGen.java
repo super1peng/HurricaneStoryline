@@ -13,6 +13,7 @@ import com.sleepycat.asm.Label;
 
 import fiu.kdrg.geocode.Geocoder;
 import fiu.kdrg.storyline.event.Event;
+import fiu.kdrg.storyline.event.EventRecognizer2DB;
 import fiu.kdrg.storyline.event.LatLng;
 
 public class StorylineGen {
@@ -26,6 +27,8 @@ public class StorylineGen {
 //		storyline.exportEvents("../sandy_all_clean_nodup_events_latlng.txt");
 //		for(Event event : storyline.events) 
 //			System.out.println(event.getEventLocation());
+//		System.out.println(storyline.events.size());
+//		EventRecognizer2DB.insertBatchEvent2DB(storyline.events, 4);
 	}
 	
 	public StorylineGen() {

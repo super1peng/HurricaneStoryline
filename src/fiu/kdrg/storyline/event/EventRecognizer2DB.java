@@ -166,6 +166,49 @@ public class EventRecognizer2DB extends EventRecognizer {
 	}
 	
 	
+	public static String INSERT_EVENTS = "insert into events " +
+			"(disaster_id,url,content,event_date,location,latitude,longtitude) values (?,?,?,?,?,?,?)";
+	public static void insertBatchEvent2DB(List<Event> events, int disasterID) {
+		
+		Connection conn = null;
+		int count = 0;
+		
+		try {
+			
+			conn = DBConnection.getDisasterConnection();
+			conn.setAutoCommit(false);
+			PreparedStatement pstm = conn.prepareStatement(INSERT_EVENTS);
+			for(Event event: events){
+				pstm.setInt(1, disasterID);
+				pstm.setString(2, event.getEventURL());
+				pstm.setString(3, event.getEventContent());
+				pstm.setDate(4, new Date(event.getEventDate()));
+				pstm.setString(5, event.getEventLocation());
+				pstm.setFloat(6, event.getLatlng().getLatitude());
+				pstm.setFloat(7, event.getLatlng().getLongtitude());
+				pstm.addBatch();
+				count ++;
+				
+				if(count % 200 == 0 ) {
+					pstm.executeBatch();
+					conn.commit();
+				}
+				
+			}
+			
+			pstm.executeBatch();
+			conn.commit();
+			conn.setAutoCommit(true);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	
 	public static String EVENTS_QUERY = "select event_id, location from events where disaster_id = ? and " +
 										"(latitude IS NULL or longtitude IS NULL)";
 	public static String UPDATE_EVENTS_LATLNG = "update events set latitude = ?, longtitude = ? " +
