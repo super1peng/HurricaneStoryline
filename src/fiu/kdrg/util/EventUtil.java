@@ -116,9 +116,9 @@ public class EventUtil {
 	
 	public static boolean allAttributesNonempty(Event event)
 	{
-		boolean hasURL = !(event.getEventURL().equals("") || null == event.getEventURL());
-		boolean hasContent = !(event.getEventContent().equals("") || null == event.getEventContent());
-		boolean hasLocation = !(event.getEventLocation().equals("") || null == event.getEventLocation());
+		boolean hasURL = !(null == event.getEventURL() || event.getEventURL().equals(""));
+		boolean hasContent = !(null == event.getEventContent() || event.getEventContent().equals(""));
+		boolean hasLocation = !(null == event.getEventLocation() || event.getEventLocation().equals(""));
 		boolean hasDate = !( null == event.getEventDate());
 		boolean haslatlng = !(null == event.getLatlng());
 		

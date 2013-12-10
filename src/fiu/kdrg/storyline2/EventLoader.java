@@ -15,7 +15,7 @@ public class EventLoader {
 
 	
 	public static String QUERY_EVENTS_BY_DID = "select * from events where disaster_id = ? and " +
-							" event_date > ? and event_date < ?"; 
+							" event_date >= ? and event_date <= ?"; 
 	public static List<Event> loadEventByDisaster(int disasterId,
 			String from, String to) {
 		
@@ -35,11 +35,12 @@ public class EventLoader {
 				Event event = new Event();
 				event.setId(rs.getInt("event_id"));
 				event.setEventContent(rs.getString("content"));
+//				rs.getDate("event_date").getTime();
 				event.setEventURL(rs.getString("url"));
-				event.setEventDate(rs.getLong("event_date"));
+				event.setEventDate(rs.getDate("event_date").getTime());
 				event.setLatlng(new LatLng(rs.getFloat("latitude"), 
 											rs.getFloat("longtitude")));
-				
+				event.setEventLocation(rs.getString("location"));
 				events.add(event);
 			}
 			

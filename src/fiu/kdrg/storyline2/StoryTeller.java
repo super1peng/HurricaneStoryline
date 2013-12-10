@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiu.kdrg.storyline.event.Event;
+import fiu.kdrg.storyline.event.EventRecognizer2DB;
 import fiu.kdrg.storyline.event.SerializeFactory;
 import fiu.kdrg.util.EventUtil;
+import fiu.kdrg.util.IOUtil;
 import fiu.kdrg.util.Util;
 
 public class StoryTeller {
@@ -277,20 +279,22 @@ public class StoryTeller {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
-		int disaster_id = 2;
+		int disaster_id = 4;
 		DocFilter filter = null;
 		ArrayList<Event> allEvents = null;
 		
 		switch (disaster_id) {
 		case 1:
-			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2005-01-01","2006-01-01");
+			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2005-08-16","2006-01-01");
 			break;
 		case 2:
-			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2012-01-01","2014-01-01");
+			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2012-10-16","2014-01-01");
 			break;
 		case 3:
-			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2011-01-01","2012-01-01");
+			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2011-08-09","2012-01-01");
 			break;
+		case 4:
+			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2012-10-16","2014-01-01");
 		default:
 			break;
 		}
@@ -308,14 +312,16 @@ public class StoryTeller {
 		try {
 			SerializeFactory.serialize(Util.rootDir + "allEvents"+disaster_id+".out", allEvents);
 			SerializeFactory.serialize(Util.rootDir + "filterEvents"+disaster_id+".out", filteredEvents);
+//			IOUtil.writeEventsToFile(filteredEvents, Util.rootDir + "filterEvents"+disaster_id+".txt");
+//			EventRecognizer2DB.insertBatchEvent2DB(filteredEvents, disaster_id,"events2");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		StoryTeller storyTeller = new StoryTeller(filteredEvents);
-		storyTeller.setEdgeRange(6, 10);
-		storyTeller.setRadius(2);
+		storyTeller.setEdgeRange(6, 20);
+		storyTeller.setRadius(3);
 		storyTeller.setEdgeW(0.001);
 //		EventUtil.displayEvents(storyTeller.events);
 //		storyTeller.simGraph = StoryUtil.computeSimilarity(storyTeller.events);

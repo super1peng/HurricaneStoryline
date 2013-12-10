@@ -41,9 +41,9 @@ public class EventRecognizer2DB extends EventRecognizer {
 	public static void main(String[] args) throws InterruptedException {
 		
 		Connection conn = DBConnection.getDisasterConnection();
-		String disaster = "Hurricane Sandy";
-		int disasterID = 1;
-//		recognizeEvents(conn, disaster);
+		String disaster = "Hurricane Irene";
+		int disasterID = 3;
+		recognizeEvents(conn, disaster);
 		fetchEventLatLng(conn,disasterID);
 		
 	}
@@ -206,6 +206,51 @@ public class EventRecognizer2DB extends EventRecognizer {
 		}
 		
 	}
+	
+	
+	
+	public static String INSERT_EVENTS_TO_TABLE = "insert into events2 " +
+			"(disaster_id,url,content,event_date,location,latitude,longtitude) values (?,?,?,?,?,?,?)";
+	public static void insertBatchEvent2DB(List<Event> events, int disasterID,String table) {
+		
+		Connection conn = null;
+		int count = 0;
+		
+		try {
+			
+			conn = DBConnection.getDisasterConnection();
+			conn.setAutoCommit(false);
+			PreparedStatement pstm = conn.prepareStatement(INSERT_EVENTS_TO_TABLE);
+			for(Event event: events){
+//				pstm.setString(1, table);
+				pstm.setInt(1, disasterID);
+				pstm.setString(2, event.getEventURL());
+				pstm.setString(3, event.getEventContent());
+				pstm.setDate(4, new Date(event.getEventDate()));
+				pstm.setString(5, event.getEventLocation());
+				pstm.setFloat(6, event.getLatlng().getLatitude());
+				pstm.setFloat(7, event.getLatlng().getLongtitude());
+				pstm.addBatch();
+				count ++;
+				
+				if(count % 200 == 0 ) {
+					pstm.executeBatch();
+					conn.commit();
+				}
+				
+			}
+			
+			pstm.executeBatch();
+			conn.commit();
+			conn.setAutoCommit(true);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+	
 	
 	
 	
