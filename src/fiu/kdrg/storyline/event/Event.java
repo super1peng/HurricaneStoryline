@@ -161,6 +161,23 @@ public class Event implements Serializable{
 	
 	
 	
+	/**
+	 * 
+	 * @param event
+	 * @param min
+	 * @param max
+	 * @return true if two events are away from each other within range [min,max], inclusive
+	 */
+	public boolean hasRange(Event event, double min, double max) {
+		double dist = this.computeDist(event);
+		if(dist <= max && dist >= min)
+			return true;
+		else
+			return false;
+	}
+	
+	
+	
 	
 	public double computeDist(Event event){
 		

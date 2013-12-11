@@ -65,6 +65,11 @@ public class StoryTeller {
 	
 	
 	protected void computeDistConstraints(double radius){
+		computeDistConstraints(0, radius);
+	}
+	
+	
+	protected void computeDistConstraints(double min, double max) {
 		
 		int n = domEvents.size();
 		distConstraints = new int[n][n];
@@ -72,10 +77,13 @@ public class StoryTeller {
 		// note that distConstraints[i][i] = 1
 		for(int i = 0; i < n; i++){
 			for(int j = i; j < n; j++){
-				//has distance less or equal than radius
-				if(domEvents.get(i).hasDistanceLe(domEvents.get(j), radius)){
+				//has distance less or equal than radius, then its value set to 1
+				if(domEvents.get(i).hasRange(domEvents.get(j), min, max)){
 					distConstraints[i][j] = 1;
 					distConstraints[j][i] = 1;
+				} else {
+					distConstraints[i][j] = 0;
+					distConstraints[j][i] = 0;
 				}
 			}
 		}
@@ -142,16 +150,18 @@ public class StoryTeller {
 		}
 		
 		
-		//the chain can not have two nodes getting too close
+		//the chain can not have two nodes getting too close and too far
 		// note that distConstraints[i][i] = 1
 		for(int i = 0; i < node_n; i++){			
 			IloIntExpr distConstraint = cplex.intExpr();
 			for(int j = 0; j < node_n; j++){
+//				distConstraint = cplex.sum(distConstraint,
+//						cplex.prod(distConstraints[i][j], nodeActiveVars[j]));
 				distConstraint = cplex.sum(distConstraint,
-						cplex.prod(distConstraints[i][j], nodeActiveVars[j]));
+						cplex.prod(1 - distConstraints[i][j], nextNodeActiveVars[i*node_n + j]));
 			}
 			// if you want only and only if one neighbor choose, you can set this to "equal"
-			cplex.addLe(distConstraint, 1);
+			cplex.addLe(distConstraint, 0.5);
 		}
 		
 		
