@@ -96,7 +96,7 @@ public class StoryTeller {
 		
 		computeLineConstraints();
 //		computeDistConstraints(radius);
-		computeDistConstraints(2, 6);
+		computeDistConstraints(3, 10);
 		simGraph = StoryUtil.computeSimilarity(domEvents);
 		
 		int node_n = domEvents.size();
