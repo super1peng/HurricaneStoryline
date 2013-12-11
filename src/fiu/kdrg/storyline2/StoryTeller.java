@@ -95,7 +95,8 @@ public class StoryTeller {
 	public void ilp() throws IloException{
 		
 		computeLineConstraints();
-		computeDistConstraints(radius);
+//		computeDistConstraints(radius);
+		computeDistConstraints(2, 6);
 		simGraph = StoryUtil.computeSimilarity(domEvents);
 		
 		int node_n = domEvents.size();
