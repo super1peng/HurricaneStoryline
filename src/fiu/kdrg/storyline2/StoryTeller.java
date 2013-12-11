@@ -332,7 +332,7 @@ public class StoryTeller {
 		StoryTeller storyTeller = new StoryTeller(filteredEvents);
 		storyTeller.setEdgeRange(6, 20);
 		storyTeller.setRadius(3);
-		storyTeller.setEdgeW(0.001);
+		storyTeller.setEdgeW(0.002);
 //		EventUtil.displayEvents(storyTeller.events);
 //		storyTeller.simGraph = StoryUtil.computeSimilarity(storyTeller.events);
 //		for(int i = 0; i < 100; i++){
