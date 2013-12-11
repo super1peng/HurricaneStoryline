@@ -289,7 +289,7 @@ public class StoryTeller {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
-		int disaster_id = 4;
+		int disaster_id = 2;
 		DocFilter filter = null;
 		ArrayList<Event> allEvents = null;
 		
