@@ -1,11 +1,3 @@
-先通过三个条件连接起各个cluster（只考虑steiner tree上的点）
-1. 地理距离限制
-2. 不同的cluster
-3. 时间顺序
-
-4. 然后在此基础上然后进行一个walk
-5. test5. test5. test5. test5. test
-
 Max Object Value 335.09121258487943
 DONE!
 
@@ -104,27 +96,6 @@ Atlantic City, N.J., Oct. 31, 2012 -- The historic boardwalk was destroyed by fi
 event[2970]:
 2012-11-01, Long Beach N.Y. | New York | New Jersey | U.S.
 One of several walkways leading to the boardwalk is destroyed after being blown away from the powerful winds of Superstorm Sandy on Thursday, Nov. 1, 2012, in Long Beach, N.Y. Three days after Sandy slammed the mid-Atlantic and the Northeast, New York and New Jersey struggled to get back on their feet, the U.S. death toll climbed to more than 80, and more than 4.6 million homes and businesses were still without power.
-
-
-
-
-1. steiner tree应该是个树，那么节点数比边最多多一
-２。　后面得到的结果跨度怎么那么远
-３. check一下算法正确性。
-
-
-可视化
-Serilization
-
-1. 选取article (filter candidate articles by dominating set)
-	
-2. 选取词 (全部的词，或者经过NLP处理)事件最好是一个时间一个topic。因为先不考虑在什么地点发生
-但是选line的时候，又要考虑到不能往回。(just use similarity first)
-
-3.　计算influence
-4.　求解LP。
-5. rounding
-6. permutation
 
 
 

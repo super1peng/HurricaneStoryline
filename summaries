@@ -71,5 +71,29 @@ Irene
 7. A person makes their way in the rain in Times Square in New York August 28, 2011 as Hurricane Irene hits the city and Tri State area with rain and high winds.
 
 
+---------------------------------------------
+1 ROUGE-1 Average_R: 0.48005 (95%-conf.int. 0.38129 - 0.53289)
+1 ROUGE-1 Average_P: 0.29629 (95%-conf.int. 0.25604 - 0.31641)
+1 ROUGE-1 Average_F: 0.36618 (95%-conf.int. 0.30636 - 0.39706)
+.............................................
+1 ROUGE-1 Eval irene.1 R:0.52597 P:0.31641 F:0.39512
+1 ROUGE-1 Eval katrina.1 R:0.53289 P:0.31641 F:0.39706
+1 ROUGE-1 Eval sandy.1 R:0.38129 P:0.25604 F:0.30636
+---------------------------------------------
+1 ROUGE-2 Average_R: 0.19307 (95%-conf.int. 0.07246 - 0.27152)
+1 ROUGE-2 Average_P: 0.11682 (95%-conf.int. 0.04854 - 0.16078)
+1 ROUGE-2 Average_F: 0.14551 (95%-conf.int. 0.05814 - 0.20197)
+.............................................
+1 ROUGE-2 Eval irene.1 R:0.23529 P:0.14118 F:0.17647
+1 ROUGE-2 Eval katrina.1 R:0.27152 P:0.16078 F:0.20197
+1 ROUGE-2 Eval sandy.1 R:0.07246 P:0.04854 F:0.05814
+---------------------------------------------
+1 ROUGE-SU4 Average_R: 0.22604 (95%-conf.int. 0.12592 - 0.28571)
+1 ROUGE-SU4 Average_P: 0.13721 (95%-conf.int. 0.08401 - 0.16842)
+1 ROUGE-SU4 Average_F: 0.17067 (95%-conf.int. 0.10078 - 0.21192)
+.............................................
+1 ROUGE-SU4 Eval irene.1 R:0.26652 P:0.15921 F:0.19934
+1 ROUGE-SU4 Eval katrina.1 R:0.28571 P:0.16842 F:0.21192
+1 ROUGE-SU4 Eval sandy.1 R:0.12592 P:0.08401 F:0.10078
 
 

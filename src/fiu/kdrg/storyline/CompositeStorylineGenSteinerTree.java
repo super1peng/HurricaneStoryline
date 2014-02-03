@@ -31,6 +31,9 @@ public class CompositeStorylineGenSteinerTree extends
 	public CompositeStorylineGenSteinerTree() {
 		simpleStorylines = new ArrayList<SimpleStorylineGenSteinerTree>();
 	}
+	
+	
+	
 
 	@Override
 	public void genStoryline() {

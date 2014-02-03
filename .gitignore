@@ -7,3 +7,6 @@
 
 # Cached Files #
 *.*~
+
+# configuration file
+Util.java

@@ -31,11 +31,12 @@ public class SimpleStorylineGenSteinerTree extends StorylineGenBaseline {
 		}
 		
 		
+		
 		KMeansClusteringJava clustering = new KMeansClusteringJava();
 		clustering.locations = locations;
-		//Members[] clusters = clustering.cluster(storyline.k);
-		Members[] clusters = clustering.clusteringWithSeedsAndRanges(getSeedsWithRanges());
-		//Members[] clusters = clustering.clusteringUsingDomset(storyline.events);
+		Members[] clusters = clustering.cluster(storyline.k);
+//		Members[] clusters = clustering.clusteringWithSeedsAndRanges(getSeedsWithRanges());
+//		Members[] clusters = clustering.clusteringUsingDomset(storyline.events);
 				
 		CompositeStorylineGenSteinerTree compositeTree = new CompositeStorylineGenSteinerTree();
 		compositeTree.events = storyline.events;//添加全局的事件
