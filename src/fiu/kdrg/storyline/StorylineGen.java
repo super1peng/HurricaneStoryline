@@ -38,7 +38,7 @@ public class StorylineGen {
 	List<Event> events;
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
-	StorylineStructure storyline;
+//	StorylineStructure storyline;
 
 	public void loadEvents(String file, Date from, Date to, String keywordpat) throws Exception {
 		Pattern pat = null;

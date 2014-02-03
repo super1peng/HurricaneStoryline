@@ -28,6 +28,10 @@ public class StorylineGenSteinerTree extends StorylineGenBaseline {
 
 	}
 	
+	
+	
+	
+	
 //	@Override
 //	public void genStoryline() {
 //		List<LatLng> locations = new ArrayList<LatLng>();
@@ -71,19 +75,19 @@ public class StorylineGenSteinerTree extends StorylineGenBaseline {
 //		}
 //		
 //	}
-//
+
 	private DirectedGraph<Integer, Edge> getConnGraph(
 			final List<Event> localEvents, double[][] simGraph) {
 		DirectedGraph<Integer, Edge> connGraph = new DefaultDirectedGraph<Integer, Edge>(Edge.class);
-		try {
-			Edge ee = Edge.class.newInstance();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Edge ee = Edge.class.newInstance();
+//		} catch (InstantiationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		for(int i = 0; i < simGraph.length; i++)
 			connGraph.addVertex(i);
 		
