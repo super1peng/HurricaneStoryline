@@ -29,7 +29,8 @@ public class SteinerTreeGenerator {
 	private List<Event> events;
 	private double[][] simGraph = null;
 	private List<Integer> doms = null;
-	private int k = 12;
+	private int approx = 12;
+	private int domMaxNum = 120;
 	private List<Map<Integer, DijkstraShortestPath<Integer, Edge>>> shortestPathsFromAllNodesToDoms;
 	private SteinerTree steinerTree = null;
 	private DirectedGraph<Integer, Edge> connGraph = null;
@@ -42,13 +43,18 @@ public class SteinerTreeGenerator {
 
 	
 	public static void main(String[] args) {
+		List<Event> events = null;
+//		events = EventLoader.loadEventByDisaster(1, "2005-08-20", "2005-10-01");
+//		events = EventLoader.loadEventByDisaster(2, "2012-10-01", "2012-12-01");
+		events = EventLoader.loadEventByDisaster(3, "2011-08-01", "2011-09-01");
 		
-		
-		
+		SteinerTreeGenerator treeGenerator = new SteinerTreeGenerator(events);
+		treeGenerator.computeSteinerTree(3);
+		treeGenerator.printSteinerTree();
 	}
 	
 	
-	private void genSimGraph() {
+	private void computeSimGraph() {
 		Map<String, Integer> idf = new HashMap<String, Integer>();
 		List<Map<String, Double>> X = new ArrayList<Map<String, Double>>();
 		simGraph = new double[events.size()][events.size()];
@@ -108,8 +114,8 @@ public class SteinerTreeGenerator {
 				/ 1000);
 	}
 
-	protected void getDomSet(int k) {
-		genSimGraph();
+	private void computeDomSet(int k) {
+		computeSimGraph();
 		doms = new ArrayList<Integer>();
 		Map<Integer, List<Integer>> clusters = new HashMap<Integer, List<Integer>>();
 
@@ -152,13 +158,14 @@ public class SteinerTreeGenerator {
 			uncovered = uncovered.put(0, ind, 0);
 			i++;
 		}
+		logger.info(String.format("dom set size %d", doms.size()));
 		logger.info("Generate dom sets done.");
 	}
 	
 
-	private DirectedGraph<Integer, Edge> genConnGraph() {
+	private DirectedGraph<Integer, Edge> computeConnGraph() {
 		if(simGraph == null)
-			genSimGraph();
+			computeSimGraph();
 		
 		DirectedGraph<Integer, Edge> connGraph = new DefaultDirectedGraph<Integer, Edge>(
 				Edge.class);
@@ -186,7 +193,10 @@ public class SteinerTreeGenerator {
 	}
 	
 
-	public void getSteinerTree(int approx) {
+	public void computeSteinerTree(int approx) {
+		if(doms == null)
+			computeDomSet(domMaxNum);
+		
 		Collections.sort(doms, new Comparator<Integer>() {
 			@Override
 			public int compare(Integer o1, Integer o2) {
@@ -195,7 +205,7 @@ public class SteinerTreeGenerator {
 			}
 		});
 
-		connGraph = genConnGraph();
+		connGraph = computeConnGraph();
 		shortestPathsFromAllNodesToDoms = new ArrayList<Map<Integer, DijkstraShortestPath<Integer, Edge>>>();
 		for (int i = 0; i < simGraph.length; i++) {
 			Map<Integer, DijkstraShortestPath<Integer, Edge>> paths = new HashMap<Integer, DijkstraShortestPath<Integer, Edge>>();
@@ -209,13 +219,12 @@ public class SteinerTreeGenerator {
 		}
 
 		int kk = doms.size();
-		// doms.get(0),最早的dom元素做为root
-		// 为了使图形的SteinerTree信息保存下来，在SteinerTree类里面加入图信息（树？）
 		SteinerTree tree = getSteinerTree(doms, doms.get(0), kk--, approx);
 		while (tree == null) {
 			tree = getSteinerTree(doms, doms.get(0), kk--, approx);
 		}
 		steinerTree = tree;
+		logger.info("Generate Steiner Tree Done");
 	}
 	
 
@@ -316,6 +325,13 @@ public class SteinerTreeGenerator {
 //		}
 //	}
 
+	
+	public void printSteinerTree(){
+		for(Integer node : steinerTree.getNodes()){
+			System.out.println(events.get(node).getEventContent());
+		}
+	}
+	
 	static public double innerProduct(Map<String, Double> a,
 			Map<String, Double> b) {
 		double inner = 0;
@@ -349,12 +365,12 @@ public class SteinerTreeGenerator {
 		return doms;
 	}
 
-	public int getK() {
-		return k;
+	public int getApprox() {
+		return approx;
 	}
 
-	public void setK(int k) {
-		this.k = k;
+	public void setApprox(int approx) {
+		this.approx = approx;
 	}
 
 	public List<Map<Integer, DijkstraShortestPath<Integer, Edge>>> getShortestPathsFromAllNodesToDoms() {

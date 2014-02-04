@@ -9,6 +9,10 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 public class SteinerTree {
 	Set<Integer> doms;//doms并不一定被cover
 	Set<Integer> nodes;
+	public Set<Integer> getNodes() {
+		return nodes;
+	}
+
 	DefaultDirectedGraph<Integer, Edge> graphSteinerTreeInfo = null;
 	
 	int cover = 0;

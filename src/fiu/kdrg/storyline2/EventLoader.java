@@ -7,12 +7,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fiu.kdrg.db.DBConnection;
 import fiu.kdrg.storyline.event.Event;
 import fiu.kdrg.storyline.event.LatLng;
 
 public class EventLoader {
 
+	private static Logger logger = LoggerFactory.getLogger(EventLoader.class);
 	
 	public static String QUERY_EVENTS_BY_DID = "select * from events where disaster_id = ? and " +
 							" event_date >= ? and event_date <= ?"; 
@@ -57,7 +61,7 @@ public class EventLoader {
 				}
 		}
 		
-		System.out.println(events.size());
+		logger.info(String.format("loading %d events",events.size()));
 		return events;
 	}
 	
@@ -106,7 +110,7 @@ public class EventLoader {
 				}
 		}
 		
-		System.out.println(events.size());
+		logger.info(String.format("loading %d events",events.size()));
 		return events;
 	}
 	
