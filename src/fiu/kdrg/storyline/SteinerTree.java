@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.jgrapht.graph.DefaultDirectedGraph;
 
-class SteinerTree {
+public class SteinerTree {
 	Set<Integer> doms;//doms并不一定被cover
 	Set<Integer> nodes;
 	DefaultDirectedGraph<Integer, Edge> graphSteinerTreeInfo = null;
@@ -73,7 +73,5 @@ class SteinerTree {
 			DefaultDirectedGraph<Integer, Edge> graphSteinerTreeInfo) {
 		this.graphSteinerTreeInfo = graphSteinerTreeInfo;
 	}
-	
-	
 	
 }
