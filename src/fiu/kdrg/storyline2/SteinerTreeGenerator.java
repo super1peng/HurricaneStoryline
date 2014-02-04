@@ -161,7 +161,7 @@ public class SteinerTreeGenerator {
     return connGraph;
   }
 
-  protected void getSteinerTree(int approx) {
+  private void getSteinerTree(int approx) {
     Collections.sort(doms, new Comparator<Integer>() {
       @Override
       public int compare(Integer o1, Integer o2) {
@@ -195,7 +195,7 @@ public class SteinerTreeGenerator {
 
   
   
-  protected SteinerTree getSteinerTree(List<Integer> doms, int root, int k,
+  private SteinerTree getSteinerTree(List<Integer> doms, int root, int k,
       int si) {
     if (si == 1)
       return getBaseSteinerTree(doms, root, k);
@@ -228,7 +228,7 @@ public class SteinerTreeGenerator {
   }
   
 
-  protected SteinerTree getBaseSteinerTree(List<Integer> doms, final int root,
+  private SteinerTree getBaseSteinerTree(List<Integer> doms, final int root,
       int k) {
     final Map<Integer, DijkstraShortestPath<Integer, Edge>> paths = this.shortestPathsFromAllNodesToDoms
         .get(root);
