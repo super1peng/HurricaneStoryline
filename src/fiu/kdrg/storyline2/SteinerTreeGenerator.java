@@ -23,9 +23,9 @@ import fiu.kdrg.storyline.event.Event;
 
 public class SteinerTreeGenerator {
 
-	private static Logger logger = LoggerFactory.getLogger(SteinerTreeGenerator.class);
-	
-	
+	private static Logger logger = LoggerFactory
+			.getLogger(SteinerTreeGenerator.class);
+
 	private List<Event> events;
 	private double[][] simGraph = null;
 	private List<Integer> doms = null;
@@ -35,25 +35,24 @@ public class SteinerTreeGenerator {
 	private SteinerTree steinerTree = null;
 	private DirectedGraph<Integer, Edge> connGraph = null;
 
-	
 	public SteinerTreeGenerator(List<Event> events) {
 		// TODO Auto-generated constructor stub
 		this.events = events;
 	}
 
-	
 	public static void main(String[] args) {
 		List<Event> events = null;
-//		events = EventLoader.loadEventByDisaster(1, "2005-08-20", "2005-10-01");
-//		events = EventLoader.loadEventByDisaster(2, "2012-10-01", "2012-12-01");
+		// events = EventLoader.loadEventByDisaster(1, "2005-08-20",
+		// "2005-10-01");
+		// events = EventLoader.loadEventByDisaster(2, "2012-10-01",
+		// "2012-12-01");
 		events = EventLoader.loadEventByDisaster(3, "2011-08-01", "2011-09-01");
-		
+
 		SteinerTreeGenerator treeGenerator = new SteinerTreeGenerator(events);
-		treeGenerator.computeSteinerTree(3);
+		treeGenerator.computeSteinerTree(1);
 		treeGenerator.printSteinerTree();
 	}
-	
-	
+
 	private void computeSimGraph() {
 		Map<String, Integer> idf = new HashMap<String, Integer>();
 		List<Map<String, Double>> X = new ArrayList<Map<String, Double>>();
@@ -110,8 +109,7 @@ public class SteinerTreeGenerator {
 						X.get(j));
 			}
 		}
-		logger.info("sim graph done, " + (new Date().getTime() - start)
-				/ 1000);
+		logger.info("sim graph done, " + (new Date().getTime() - start) / 1000);
 	}
 
 	private void computeDomSet(int k) {
@@ -161,12 +159,11 @@ public class SteinerTreeGenerator {
 		logger.info(String.format("dom set size %d", doms.size()));
 		logger.info("Generate dom sets done.");
 	}
-	
 
 	private DirectedGraph<Integer, Edge> computeConnGraph() {
-		if(simGraph == null)
+		if (simGraph == null)
 			computeSimGraph();
-		
+
 		DirectedGraph<Integer, Edge> connGraph = new DefaultDirectedGraph<Integer, Edge>(
 				Edge.class);
 		for (int i = 0; i < simGraph.length; i++)
@@ -189,14 +186,15 @@ public class SteinerTreeGenerator {
 			}
 		}
 		logger.info("Generate Directed Graph Done");
+		logger.info(String.format("directed graph size is %d", connGraph
+				.edgeSet().size()));
 		return connGraph;
 	}
-	
 
 	public void computeSteinerTree(int approx) {
-		if(doms == null)
+		if (doms == null)
 			computeDomSet(domMaxNum);
-		
+
 		Collections.sort(doms, new Comparator<Integer>() {
 			@Override
 			public int compare(Integer o1, Integer o2) {
@@ -226,21 +224,20 @@ public class SteinerTreeGenerator {
 		steinerTree = tree;
 		logger.info("Generate Steiner Tree Done");
 	}
-	
 
-	private SteinerTree getSteinerTree(List<Integer> doms, int root, int k,
-			int si) {
-		if (si == 1)
-			return getBaseSteinerTree(doms, root, k);
+	private SteinerTree getSteinerTree(List<Integer> doms, int root,
+			int targetSize, int approx) {
+		if (approx == 1)
+			return getBaseSteinerTree(doms, root, targetSize);
 		int n = connGraph.vertexSet().size();
 		SteinerTree tree = new SteinerTree(doms);
-		while (k > 0) {
+		while (targetSize > 0) {
 			SteinerTree besttree = new SteinerTree(doms);
 			besttree.add(root);
 			for (Edge e : connGraph.outgoingEdgesOf(root)) {
 				int v = connGraph.getEdgeTarget(e);
-				for (int kp = 1; kp <= k; kp++) {
-					SteinerTree ctree = getSteinerTree(doms, v, kp, si - 1);
+				for (int kp = 1; kp <= targetSize; kp++) {
+					SteinerTree ctree = getSteinerTree(doms, v, kp, approx - 1);
 					if (ctree == null)
 						continue;
 					ctree.add(root);// 这个地方应该加条root到v的边
@@ -251,7 +248,7 @@ public class SteinerTreeGenerator {
 			}
 			if (besttree.cover() == 0)
 				return null;
-			k -= besttree.cover();
+			targetSize -= besttree.cover();
 			doms = new ArrayList<Integer>(doms);
 			doms.removeAll(besttree.getDoms());
 
@@ -260,10 +257,10 @@ public class SteinerTreeGenerator {
 		return tree;
 	}
 
-	
 	private SteinerTree getBaseSteinerTree(List<Integer> doms, final int root,
-			int k) {
-		final Map<Integer, DijkstraShortestPath<Integer, Edge>> paths = this.shortestPathsFromAllNodesToDoms
+			int targetSize) {
+		logger.info("entering getBaseSteinerTree methods");
+		final Map<Integer, DijkstraShortestPath<Integer, Edge>> paths = shortestPathsFromAllNodesToDoms
 				.get(root);
 
 		SteinerTree tree = new SteinerTree(doms);
@@ -288,13 +285,19 @@ public class SteinerTreeGenerator {
 			}
 		});
 
-		// 这不一定是最优的最短路径集合。在这个地方可构造出对应的steinerTree（详细的图，而不是只有点和cover的点信息）。
+		logger.info("merge shortest path");
 		for (int i = 0; i < targets.size(); i++) {
-			if (tree.cover() == k)
+			if (tree.cover() == targetSize)
 				break;
 			int nodei = targets.get(i);
-			if (paths.get(nodei).getPathEdgeList() == null)
+			List<Edge> edges = paths.get(nodei).getPathEdgeList();
+			if (edges == null) {
 				break;
+			} else {
+				logger.info(String.format(
+						"root to target %d's path,length is %d", nodei,
+						edges.size()));
+			}
 			for (Edge e : paths.get(nodei).getPathEdgeList()) {// 最短路径生成的不一定是颗树？？？
 				Integer target = connGraph.getEdgeTarget(e);
 				Integer source = connGraph.getEdgeSource(e);
@@ -306,32 +309,31 @@ public class SteinerTreeGenerator {
 			}
 		}
 
-		if (tree.cover() != k)
-			return null;
-		else
-			return tree;
+		// if (tree.cover() != targetSize)
+		// return null;
+		// else
+		return tree;
 	}
 
-//	private void setEventWeights() {
-//
-//		int n = simGraph.length;
-//		DoubleMatrix simGraphMatrix = new DoubleMatrix(simGraph);
-//		DoubleMatrix addMatrix = DoubleMatrix.ones(1, n);
-//		DoubleMatrix weights = DoubleMatrix.zeros(1, n);
-//		weights = addMatrix.mmul(simGraphMatrix);
-//
-//		for (int i = 0; i < n; i++) {
-//			events.get(i).setWeight(weights.get(i));
-//		}
-//	}
+	// private void setEventWeights() {
+	//
+	// int n = simGraph.length;
+	// DoubleMatrix simGraphMatrix = new DoubleMatrix(simGraph);
+	// DoubleMatrix addMatrix = DoubleMatrix.ones(1, n);
+	// DoubleMatrix weights = DoubleMatrix.zeros(1, n);
+	// weights = addMatrix.mmul(simGraphMatrix);
+	//
+	// for (int i = 0; i < n; i++) {
+	// events.get(i).setWeight(weights.get(i));
+	// }
+	// }
 
-	
-	public void printSteinerTree(){
-		for(Integer node : steinerTree.getNodes()){
+	public void printSteinerTree() {
+		for (Integer node : steinerTree.getNodes()) {
 			System.out.println(events.get(node).getEventContent());
 		}
 	}
-	
+
 	static public double innerProduct(Map<String, Double> a,
 			Map<String, Double> b) {
 		double inner = 0;
@@ -348,7 +350,6 @@ public class SteinerTreeGenerator {
 		return inner;
 	}
 
-	
 	public List<Event> getEvents() {
 		return events;
 	}
@@ -380,7 +381,6 @@ public class SteinerTreeGenerator {
 	public SteinerTree getSteinerTree() {
 		return steinerTree;
 	}
-
 
 	public DirectedGraph<Integer, Edge> getConnGraph() {
 		return connGraph;
