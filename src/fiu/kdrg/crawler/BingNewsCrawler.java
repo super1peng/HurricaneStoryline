@@ -208,10 +208,12 @@ public class BingNewsCrawler {
 	
 	public static void main(String[] args) {
 	
-		BingNewsCrawler newsCrawer = new BingNewsCrawler("Hurricane Sandy", 1, 800);
-		newsCrawer.startCrawling();
+		for(int i = 1; 100 * i < 1100; i++){
+			BingNewsCrawler newsCrawer = new BingNewsCrawler("fuel cell", i, 1000);
+			newsCrawer.startCrawling();
 //		String title = "Hurricane Irene-damaged summer camp to rebuild";
 //		System.out.println(title.length());
+		}
 //		
 	}
 	

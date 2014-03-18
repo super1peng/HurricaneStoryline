@@ -9,18 +9,23 @@ import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import de.l3s.boilerpipe.extractors.ArticleSentencesExtractor;
 import de.l3s.boilerpipe.extractors.DefaultExtractor;
-
 import fiu.kdrg.db.DBConnection;
 
 public class HtmlPurefier {
 
+	private Logger logger = LoggerFactory.getLogger(HtmlPurefier.class);
+	
 	public static String QUERY_DISASTER_SQL = "select id from disasters where name = ?";
 	public static String QUERY_DISASTER_NEWS_SQL = "select news_id, url,html from disaster_news " +
+													"where disaster_id = ? and html IS NOT NULL";
+	public static String QUERY_DISASTER_NEWS_CNT_SQL = "select count(*) from disaster_news " +
 													"where disaster_id = ? and html IS NOT NULL";
 	public static String UPDATE_TEXT_SQL = "update disaster_news set text = ? where news_id = ?";
 	public static final int JSOUP_METHOD = 1;
@@ -118,17 +123,35 @@ public class HtmlPurefier {
 			if(rs.next()){
 				disasterID = rs.getInt(1);
 			}
+			pstm.close();
+			rs.close();
 			
-			pstm = conn.prepareStatement(QUERY_DISASTER_NEWS_SQL);
+			int numOfDisasters = 0;
+			pstm = conn.prepareStatement(QUERY_DISASTER_NEWS_CNT_SQL);
 			pstm.setInt(1, disasterID);
 			rs = pstm.executeQuery();
+			if(rs.next()){
+				numOfDisasters = rs.getInt(1);
+			}
+			pstm.close();
+			rs.close();
 			
-			while(rs.next()){
-				BingSearchNews tmp = new BingSearchNews();
-				tmp.setId(rs.getInt(1));
-				tmp.setUrl(rs.getString(2));
-				tmp.setHtml(rs.getString(3));
-				news.add(tmp);
+			for(int start = 0; start < numOfDisasters;){
+				pstm = conn.prepareStatement(String.format(QUERY_DISASTER_NEWS_SQL + " limit %d, %d", start,1000));
+				pstm.setInt(1, disasterID);
+				rs = pstm.executeQuery();
+				
+				while(rs.next()){
+					BingSearchNews tmp = new BingSearchNews();
+					tmp.setId(rs.getInt(1));
+					tmp.setUrl(rs.getString(2));
+					tmp.setHtml(rs.getString(3));
+					news.add(tmp);
+				}
+				pstm.close();
+				rs.close();
+				start = start + 1000;
+				logger.info(String.format("done %d", start));
 			}
 			
 		} catch (SQLException e) {
@@ -136,6 +159,7 @@ public class HtmlPurefier {
 			e.printStackTrace();
 		}
 		
+		System.out.println("fetch done!");
 		return news;
 		
 	}
@@ -143,7 +167,7 @@ public class HtmlPurefier {
 	
 	public static void main(String[] args) throws BoilerpipeProcessingException {
 		
-		HtmlPurefier purefier = new HtmlPurefier("Hurricane Irene");
+		HtmlPurefier purefier = new HtmlPurefier("fuel cell");
 //		List<BingSearchNews> news = purefier.fetchRawBingSearchNews();
 //		for(int i = 0 ; i < 2; i++){
 //			System.out.println(news.get(i).getUrl());

@@ -1,0 +1,106 @@
+33d32945 STP File, STP Format Version 1.0
+
+SECTION Comment
+Name    ""
+Creator "Dimitri Watel"
+Remark  ""
+END
+
+SECTION Graph
+Nodes 50
+Arcs 63
+A 5 22 4
+A 9 18 5
+A 10 13 1
+A 21 30 9
+A 10 48 1
+A 9 22 8
+A 30 26 10
+A 19 40 8
+A 48 2 8
+A 10 9 4
+A 12 30 5
+A 10 30 8
+A 4 5 1
+A 50 17 7
+A 50 14 7
+A 37 29 2
+A 42 44 9
+A 22 25 2
+A 9 45 9
+A 6 45 3
+A 31 37 2
+A 50 40 5
+A 29 41 4
+A 11 21 8
+A 9 21 1
+A 20 10 4
+A 9 41 10
+A 42 36 8
+A 10 6 4
+A 1 49 6
+A 34 1 10
+A 7 33 5
+A 11 15 8
+A 17 7 4
+A 30 32 4
+A 48 4 1
+A 29 7 4
+A 50 39 1
+A 43 50 7
+A 16 38 2
+A 11 3 8
+A 20 11 5
+A 27 24 5
+A 14 28 7
+A 13 34 2
+A 34 46 6
+A 26 39 6
+A 36 33 5
+A 12 19 9
+A 21 8 7
+A 9 43 2
+A 30 31 8
+A 41 42 6
+A 40 24 1
+A 22 4 5
+A 15 47 9
+A 22 50 5
+A 21 12 1
+A 20 23 7
+A 12 35 8
+A 9 27 1
+A 18 16 4
+A 5 31 2
+END
+
+SECTION Terminals
+Terminals 24
+Root 20
+T 1
+T 2
+T 4
+T 9
+T 10
+T 12
+T 13
+T 15
+T 16
+T 25
+T 24
+T 28
+T 34
+T 32
+T 38
+T 39
+T 36
+T 37
+T 42
+T 41
+T 44
+T 50
+T 49
+T 48
+END
+
+EOF
