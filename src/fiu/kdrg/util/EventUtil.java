@@ -99,7 +99,7 @@ public class EventUtil {
 	}
 	
 	
-	public static ArrayList<Event> sortEventByDate(ArrayList<Event> events){
+	public static List<Event> sortEventByDate(List<Event> events){
 		
 		Collections.sort(events, new Comparator<Event>() {
 			

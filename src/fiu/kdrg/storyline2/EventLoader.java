@@ -110,7 +110,7 @@ public class EventLoader {
 				}
 		}
 		
-		logger.info(String.format("loading %d events",events.size()));
+		logger.info(String.format("loading %d dominating events",events.size()));
 		return events;
 	}
 	

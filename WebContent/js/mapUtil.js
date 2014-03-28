@@ -265,6 +265,27 @@ function FiuStorylineMapUtilObject(){
 			self.clearPoly(self.mediumStorylinePoly);
 			//refThis.displayPoly(map,neighbor,refThis.mediumStorylinePoly,refThis.redPolyOptions);
 			
+			
+			
+			
+			
+			
+			$.get("loadLocalSteinerTree",{
+				disasterID:disasterID,
+				eventID:marker.event.id
+			},function(data){
+				
+				var arcs = data.arcs;
+				
+			});
+			
+			
+			
+			
+			
+			
+			
+			
 			var heatEvents = chooseMarkerNeighbors(marker,self.allEvents,4);
 			console.log(heatEvents.length);
 			self.heatMap.setData(eventsToMVCArray(heatEvents));			
@@ -338,6 +359,7 @@ function FiuStorylineMapUtilObject(){
 		self.polyOptions = polyOptions;
 	};
 	
+	//set finalResult 
 	FiuStorylineMapUtilObject.prototype.setEvents = function(events){
 		self.events = events;
 	};
@@ -345,6 +367,11 @@ function FiuStorylineMapUtilObject(){
 	
 	FiuStorylineMapUtilObject.prototype.setAllEvents = function(events){
 		self.allEvents = events;
+		self.mapAllEvents = {};
+		for(var i = 0; i < events.length; i++){
+			self.mapAllEvents[events[i].id] = events[i];
+		}
+		console.log(self.mapAllEvents);
 	};
 	
 	FiuStorylineMapUtilObject.prototype.getPolyOptions = function()

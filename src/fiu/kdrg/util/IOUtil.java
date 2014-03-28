@@ -26,7 +26,7 @@ public class IOUtil {
 		
 		System.out.println(path);
 		
-		ArrayList<Event> eventArray = new ArrayList<Event>();
+		List<Event> eventArray = new ArrayList<Event>();
 		eventArray = IOUtil.parseFileTOEvents(path);
 		eventArray = EventUtil.sortEventByDate(eventArray);
 		

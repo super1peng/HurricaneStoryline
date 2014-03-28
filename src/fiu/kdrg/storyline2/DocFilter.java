@@ -11,6 +11,13 @@ import fiu.kdrg.storyline.event.SerializeFactory;
 import fiu.kdrg.util.EventUtil;
 import fiu.kdrg.util.Util;
 
+/**
+ * get dominating set
+ * @author zhouwubai
+ * @date Mar 27, 2014
+ * @email zhouwubai@gmail.com
+ * Apache Licence 2.0
+ */
 public class DocFilter {
 	
 	List<Event> events;

@@ -41,6 +41,7 @@
             var map;
 			var testData = []; 
 			var mapUtil = new FiuStorylineMapUtilObject();
+			var disasterID;
             
             //add one array to map so as to store markers attached to map.
             google.maps.Map.prototype.markers = new Array();
@@ -55,7 +56,7 @@
 			
 
 
-// # ready function			
+			// # ready function			
 			$(function(){
 				
 				loadFinalEvents();
@@ -65,16 +66,6 @@
 					clickHidableToggler();
 				});
 				
-				var word_array = [
-          			{text: "Lorem", weight: 15},
-          			{text: "Ipsum", weight: 9, link: "http://jquery.com/"},
-          			{text: "Dolor", weight: 6, html: {title: "I can haz any html attribute"}},
-          			{text: "Sit", weight: 7},
-          			{text: "Amet", weight: 5}
-          			// ...as many words as you want
-      			];
-				
-				$('.wordcloud').jQCloud(word_array);
 			});
 			
 
@@ -93,7 +84,7 @@
 			
 			function loadFinalEvents(){
 				
-				
+				disasterID = 1;
 				$.get("LoadFinalEventServlet",{fileName:"allEvents1.out"},function(rtnData){
 					var events = rtnData.events;
 					testData = events;

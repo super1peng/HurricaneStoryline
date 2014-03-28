@@ -37,20 +37,20 @@ public class Main {
 		// Run one of those methods to compute a small SteinerUndirectedInstance
 		// and transform it into a directed one : bidirected, acyclic or strongly connected
 //		exampleTransformUndirectedIntoBidirected();
-		exampleTransformUndirectedIntoAcyclic();
+//		exampleTransformUndirectedIntoAcyclic();
 //		exampleTransformUndirectedIntoStronglyConnected();
 		
 		// Run one of those methods to transform all the instances describe with the
 		// STP format in the directory SteinLib/B into directed instances (bidirected
 		// acyclic or strongly connected) and store them into their own directory.
-//		exampleCreateBidirectedInstances();
-		exampleCreateAcyclicInstances();
+		exampleCreateBidirectedInstances();
+//		exampleCreateAcyclicInstances();
 //		exampleCreateSronglyConnectedInstances();
 		
 		// Run one of those methods to compute the GFLACAlgorithm over the previous
 		// generated instances and show the results on standart output.
 //		exampleLaunchBidirTest();
-		exampleLaunchAcyclicTest();
+//		exampleLaunchAcyclicTest();
 //		exampleLaunchStronglyTest();
 		
 	}

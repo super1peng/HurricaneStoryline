@@ -292,20 +292,20 @@ public class StoryTeller {
 		
 		int disaster_id = 4;
 		DocFilter filter = null;
-		ArrayList<Event> allEvents = null;
+		List<Event> allEvents = null;
 		
 		switch (disaster_id) {
 		case 1:
-			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2005-08-16","2006-01-01");
+			allEvents = EventLoader.loadEventByDisaster(disaster_id, "2005-08-16","2006-01-01");
 			break;
 		case 2:
-			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2012-10-16","2014-01-01");
+			allEvents = EventLoader.loadEventByDisaster(disaster_id, "2012-10-16","2014-01-01");
 			break;
 		case 3:
-			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2011-08-09","2012-01-01");
+			allEvents = EventLoader.loadEventByDisaster(disaster_id, "2011-08-09","2012-01-01");
 			break;
 		case 4:
-			allEvents = (ArrayList<Event>) EventLoader.loadEventByDisaster(disaster_id, "2012-10-16","2014-01-01");
+			allEvents = EventLoader.loadEventByDisaster(disaster_id, "2012-10-16","2014-01-01");
 		default:
 			break;
 		}
@@ -374,7 +374,7 @@ public class StoryTeller {
 	}
 
 
-
+	
 	public void setEdgeW(double edgeW) {
 		this.edgeW = edgeW;
 	}
