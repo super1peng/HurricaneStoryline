@@ -155,7 +155,7 @@ function FiuStorylineMapUtilObject(){
 	
 	
 	self.storylinePoly = new google.maps.Polyline();
-	self.mediumStorylinePoly = new google.maps.Polyline();
+	self.mediumStorylinePoly = [];
 	self.heatMap = new google.maps.visualization.HeatmapLayer({radius:20});
 	
 	//singleton InfoWindow
@@ -223,7 +223,7 @@ function FiuStorylineMapUtilObject(){
 	FiuStorylineMapUtilObject.prototype.setLayerTwoMarker = function(map,events){
 		
 		self.clearMarkers(self.mediumStorylineMarkers);
-		
+		console.log(events);
 		for ( var i = 0; i < events.length; i++) {
 			var markerLatLng = new google.maps.LatLng(
 					events[i].latlng.latitude,
@@ -262,12 +262,8 @@ function FiuStorylineMapUtilObject(){
 			map.setCenter(marker.getPosition());
 
 			self.clearPoly(self.storylinePoly);
-			self.clearPoly(self.mediumStorylinePoly);
+			self.clearPolys(self.mediumStorylinePoly);
 			//refThis.displayPoly(map,neighbor,refThis.mediumStorylinePoly,refThis.redPolyOptions);
-			
-			
-			
-			
 			
 			
 			$.get("loadLocalSteinerTree",{
@@ -276,6 +272,26 @@ function FiuStorylineMapUtilObject(){
 			},function(data){
 				
 				var arcs = data.arcs;
+				arcEventsMap = {};
+				for(var i = 0; i < arcs.length; i++){
+					if(arcEventsMap[arcs[i].input] == undefined){
+						arcEventsMap[arcs[i].input] = self.mapAllEvents[arcs[i].input];
+					}
+					if(arcEventsMap[arcs[i].output] == undefined){
+						arcEventsMap[arcs[i].output] = self.mapAllEvents[arcs[i].output];
+					}
+				}
+				
+				arcEvents = [];
+				for(var e in arcEventsMap){
+					arcEvents.push(arcEventsMap[e]);
+				}
+				
+				console.log(data);
+				console.log(arcEventsMap);
+				console.log(arcEvents);
+				self.setLayerTwoMarker(map,arcEvents);
+				self.displayPolys(map,arcEventsMap,arcs,self.redPolyOptions);
 				
 			});
 			
@@ -286,19 +302,19 @@ function FiuStorylineMapUtilObject(){
 			
 			
 			
-			var heatEvents = chooseMarkerNeighbors(marker,self.allEvents,4);
-			console.log(heatEvents.length);
-			self.heatMap.setData(eventsToMVCArray(heatEvents));			
-			self.heatMap.setMap(map);
-			
-			var fname = "storyline" + marker.event.id + ".out";
-			console.log(fname);
-			$.get("LoadFinalEventServlet",{fileName:fname},function(rtnData){
-				var layer2Storyline = rtnData.events;
-//				console.log(layer2Storyline);
-				updateContentOfStoryPanel(layer2Storyline);
-				
-			});
+//			var heatEvents = chooseMarkerNeighbors(marker,self.allEvents,4);
+//			console.log(heatEvents.length);
+//			self.heatMap.setData(eventsToMVCArray(heatEvents));			
+//			self.heatMap.setMap(map);
+//			
+//			var fname = "storyline" + marker.event.id + ".out";
+//			console.log(fname);
+//			$.get("LoadFinalEventServlet",{fileName:fname},function(rtnData){
+//				var layer2Storyline = rtnData.events;
+////				console.log(layer2Storyline);
+//				updateContentOfStoryPanel(layer2Storyline);
+//				
+//			});
 		});
 	};
 	
@@ -317,6 +333,15 @@ function FiuStorylineMapUtilObject(){
     	poly.setMap(null);
     	poly.getPath().clear();
     };
+    
+    
+    FiuStorylineMapUtilObject.prototype.clearPolys = function(polys){
+    	for(var i = 0; i < polys.length;i++){
+    		polys[i].setMap(null);
+        	polys[i].getPath().clear();
+    	}
+    };
+    
 	
     FiuStorylineMapUtilObject.prototype.attachInfoWindow = function(map,marker,event) {
 		
@@ -350,6 +375,24 @@ function FiuStorylineMapUtilObject(){
 		
 	};
 	
+	
+		FiuStorylineMapUtilObject.prototype.displayPolys = function(map,events,arcs,polyOptions){
+		
+		for(var i = 0; i < arcs.length; i ++){
+			
+			var poly = new google.maps.Polyline();
+			polyOptions = pickDefaultParam(polyOptions, self.polyOptions);
+			poly.setOptions(polyOptions);
+			poly.setMap(map);
+			
+			var path = poly.getPath();
+			path.push(self.convertEventLatLng(events[arcs[i].input]));
+			path.push(self.convertEventLatLng(events[arcs[i].output]));
+			
+			self.mediumStorylinePoly.push(poly);
+		}
+		
+	};
 	
 	
 	

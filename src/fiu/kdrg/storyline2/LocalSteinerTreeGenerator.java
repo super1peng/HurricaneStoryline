@@ -29,8 +29,8 @@ public class LocalSteinerTreeGenerator {
 	
 	public LocalSteinerTreeGenerator(int dID) {
 		this.dID = dID;
-		this.circleRange = 5.0;
-		this.k = 12;
+		this.circleRange = 4.0;
+		this.k = 30;
 		hourGap = 50;
 		init();
 	}

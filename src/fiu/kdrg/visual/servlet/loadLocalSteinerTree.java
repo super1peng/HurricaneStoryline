@@ -65,6 +65,8 @@ public class loadLocalSteinerTree extends HttpServlet {
 		response.setHeader("pragma", "no-cache");
 		response.setHeader("cache-control", "no-cache");
 
+		System.out.println(String.format("diaster id %d, event id %d", dID,eID));
+		System.out.println(ret.toString());
 		JsonWriter jw = new JsonWriter(response.getWriter());
 		gson.toJson(ret, jw);
 		jw.flush();
