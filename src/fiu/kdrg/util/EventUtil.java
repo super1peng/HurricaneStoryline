@@ -24,7 +24,9 @@ public class EventUtil {
 	{
 		if(null == event)
 			return;
-		System.out.print(event.getEventURL() + "\t");
+		
+		System.out.print(event.getId() + "\t");
+//		System.out.print(event.getEventURL() + "\t");
 		System.out.print(event.getEventContent() + "\t");
 		System.out.print(event.getEventLocation() +"\t" + event.getEventDate());
 		if(null != event.getLatlng())

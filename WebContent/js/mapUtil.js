@@ -248,6 +248,7 @@ function FiuStorylineMapUtilObject(){
 		google.maps.event.addListener(marker, 'click', function(event) {
 //			console.log(1);
 //			map.panTo(marker.getPosition());
+			console.log(marker.event);
 			self.infowindow.setContent(self.getInfoWindowContent(marker.event));
 			self.infowindow.open(map,marker);
 		});

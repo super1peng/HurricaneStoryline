@@ -1,8 +1,13 @@
 package fiu.kdrg.storyline2;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +17,9 @@ import fiu.kdrg.storyline.event.SerializeFactory;
 import fiu.kdrg.util.EventUtil;
 import fiu.kdrg.util.Util;
 import graphTheory.algorithms.steinerProblems.steinerArborescenceApproximation.ShPAlgorithm;
+import graphTheory.graph.Arc;
 import graphTheory.graph.DirectedGraph;
+import graphTheory.graphDrawer.EnergyAnalogyGraphDrawer;
 import graphTheory.instances.steiner.classic.SteinerDirectedInstance;
 
 public class LocalSteinerTreeGenerator {
@@ -21,6 +28,7 @@ public class LocalSteinerTreeGenerator {
 	private Logger logger = LoggerFactory.getLogger(LocalSteinerTreeGenerator.class);
 	
 	private List<Event> events;
+	private Map<Integer,Event> mapEvents;
 	private double circleRange;
 	private int k;
 	private int hourGap;
@@ -30,8 +38,9 @@ public class LocalSteinerTreeGenerator {
 	public LocalSteinerTreeGenerator(int dID) {
 		this.dID = dID;
 		this.circleRange = 4.0;
-		this.k = 30;
-		hourGap = 50;
+		this.k = 20;
+		hourGap = 30;
+		mapEvents = new HashMap<Integer, Event>();
 		init();
 	}
 	
@@ -87,6 +96,7 @@ public class LocalSteinerTreeGenerator {
 		ShPAlgorithm alg = new ShPAlgorithm();
 		alg.setInstance(sdi);
 		alg.compute();
+		printTree(alg.getArborescence());
 		
 		return alg;
 	}
@@ -96,6 +106,9 @@ public class LocalSteinerTreeGenerator {
 		
 		try {
 			events = (List<Event>) SerializeFactory.deSerialize(Util.rootDir + "allEvents"+dID+".out");
+			for(Event e : events){
+				mapEvents.put(e.getId(), e);
+			}
 			logger.info(String.format("load disaster %d event done!", dID));
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -124,18 +137,28 @@ public class LocalSteinerTreeGenerator {
 	
 	
 	private Event searchEvent(int id){
-		for(Event event : events){
-			if(event.getId() == id){
-				return event;
-			}
+		return mapEvents.get(id);
+	}
+	
+	
+	
+	private void printTree(Set<Arc> arcs){
+		
+		Set<Event> eventsMap = new HashSet<Event>();
+		for(Arc arc : arcs){
+			eventsMap.add(searchEvent(arc.getInput()));
+			eventsMap.add(searchEvent(arc.getOutput()));
 		}
-		return null;
+		
+		List<Event> events = new ArrayList<Event>(eventsMap);
+		EventUtil.displayEvents(EventUtil.sortEventByDate(events));
+		
 	}
 	
 	
 	public static void main(String[] args) {
 		
-		int disaster_id = 4;
+		int disaster_id = 3;
 		List<Event> finalR = null;
 		
 		try {
@@ -154,11 +177,21 @@ public class LocalSteinerTreeGenerator {
 		
 		
 		LocalSteinerTreeGenerator stg = new LocalSteinerTreeGenerator(disaster_id);
-		ShPAlgorithm alg = stg.compute(st.get(0));
 		
-		System.out.println("Returned solution : " + alg.getArborescence());
-		System.out.println("Cost: " + alg.getCost());
-		System.out.println("Running Time: " + alg.getTime() + " ms");
+		for(Event e : st){
+			if(e.getId() == 14774){
+				System.out.println(e.getId());
+				ShPAlgorithm alg = stg.compute(e);
+				System.out.println("Returned solution : " + alg.getArborescence());
+				System.out.println("Cost: " + alg.getCost());
+				System.out.println("Running Time: " + alg.getTime() + " ms");
+				
+				
+//				DirectedGraph dg = new DirectedGraph();
+				
+			}
+		}
+		
 	}
 	
 	
