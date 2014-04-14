@@ -2,6 +2,7 @@ package fiu.kdrg.visual.servlet.helper;
 
 import fiu.kdrg.storyline2.LocalSteinerTreeGenerator;
 import graphTheory.algorithms.steinerProblems.steinerArborescenceApproximation.ShPAlgorithm;
+import graphTheory.algorithms.steinerProblems.steinerArborescenceApproximation.SteinerArborescenceApproximationAlgorithm;
 import graphTheory.graph.Arc;
 
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class Cacher {
 		if (!modelCacher.containsKey(generateKey(dID, eID))) {
 			
 			LocalSteinerTreeGenerator stg = new LocalSteinerTreeGenerator(dID);
-			ShPAlgorithm alg = stg.compute(eID);
+			SteinerArborescenceApproximationAlgorithm alg = stg.compute(eID);
 			if(alg != null){
 				modelCacher.put(generateKey(dID, eID), alg.getArborescence());
 			}

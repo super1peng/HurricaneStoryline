@@ -1,0 +1,150 @@
+<ROUGE_EVAL version="1.5.5">
+
+<EVAL ID="katrina_to_l">
+<PEER-ROOT>
+summaries/
+</PEER-ROOT>
+<MODEL-ROOT>
+summaries/
+</MODEL-ROOT>
+<INPUT-FORMAT TYPE="SPL">
+</INPUT-FORMAT>
+<PEERS>
+<P ID="1">katrina.txt</P>
+</PEERS>
+<MODELS>
+<M ID="B">katrina_l.txt</M>
+</MODELS>
+</EVAL>
+<EVAL ID="katrina_to_d">
+<PEER-ROOT>
+summaries/
+</PEER-ROOT>
+<MODEL-ROOT>
+summaries/
+</MODEL-ROOT>
+<INPUT-FORMAT TYPE="SPL">
+</INPUT-FORMAT>
+<PEERS>
+<P ID="1">katrina.txt</P>
+</PEERS>
+<MODELS>
+<M ID="B">katrina_d.txt</M>
+</MODELS>
+</EVAL>
+<EVAL ID="katrina_to_s">
+<PEER-ROOT>
+summaries/
+</PEER-ROOT>
+<MODEL-ROOT>
+summaries/
+</MODEL-ROOT>
+<INPUT-FORMAT TYPE="SPL">
+</INPUT-FORMAT>
+<PEERS>
+<P ID="1">katrina.txt</P>
+</PEERS>
+<MODELS>
+<M ID="B">katrina_s.txt</M>
+</MODELS>
+</EVAL>
+
+<EVAL ID="sandy_to_l">
+<PEER-ROOT>
+summaries/
+</PEER-ROOT>
+<MODEL-ROOT>
+summaries/
+</MODEL-ROOT>
+<INPUT-FORMAT TYPE="SPL">
+</INPUT-FORMAT>
+<PEERS>
+<P ID="1">sandy.txt</P>
+</PEERS>
+<MODELS>
+<M ID="B">sandy_l.txt</M>
+</MODELS>
+</EVAL>
+<EVAL ID="sandy_to_d">
+<PEER-ROOT>
+summaries/
+</PEER-ROOT>
+<MODEL-ROOT>
+summaries/
+</MODEL-ROOT>
+<INPUT-FORMAT TYPE="SPL">
+</INPUT-FORMAT>
+<PEERS>
+<P ID="1">sandy.txt</P>
+</PEERS>
+<MODELS>
+<M ID="B">sandy_d.txt</M>
+</MODELS>
+</EVAL>
+<EVAL ID="sandy_to_s">
+<PEER-ROOT>
+summaries/
+</PEER-ROOT>
+<MODEL-ROOT>
+summaries/
+</MODEL-ROOT>
+<INPUT-FORMAT TYPE="SPL">
+</INPUT-FORMAT>
+<PEERS>
+<P ID="1">sandy.txt</P>
+</PEERS>
+<MODELS>
+<M ID="B">sandy_s.txt</M>
+</MODELS>
+</EVAL>
+
+<EVAL ID="irene_to_l">
+<PEER-ROOT>
+summaries/
+</PEER-ROOT>
+<MODEL-ROOT>
+summaries/
+</MODEL-ROOT>
+<INPUT-FORMAT TYPE="SPL">
+</INPUT-FORMAT>
+<PEERS>
+<P ID="1">irene.txt</P>
+</PEERS>
+<MODELS>
+<M ID="B">irene_l.txt</M>
+</MODELS>
+</EVAL>
+<EVAL ID="irene_to_d">
+<PEER-ROOT>
+summaries/
+</PEER-ROOT>
+<MODEL-ROOT>
+summaries/
+</MODEL-ROOT>
+<INPUT-FORMAT TYPE="SPL">
+</INPUT-FORMAT>
+<PEERS>
+<P ID="1">irene.txt</P>
+</PEERS>
+<MODELS>
+<M ID="B">irene_d.txt</M>
+</MODELS>
+</EVAL>
+<EVAL ID="irene_to_s">
+<PEER-ROOT>
+summaries/
+</PEER-ROOT>
+<MODEL-ROOT>
+summaries/
+</MODEL-ROOT>
+<INPUT-FORMAT TYPE="SPL">
+</INPUT-FORMAT>
+<PEERS>
+<P ID="1">irene.txt</P>
+</PEERS>
+<MODELS>
+<M ID="B">irene_s.txt</M>
+</MODELS>
+</EVAL>
+
+</ROUGE_EVAL>

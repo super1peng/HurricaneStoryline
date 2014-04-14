@@ -16,7 +16,9 @@ import fiu.kdrg.storyline.event.Event;
 import fiu.kdrg.storyline.event.SerializeFactory;
 import fiu.kdrg.util.EventUtil;
 import fiu.kdrg.util.Util;
+import graphTheory.algorithms.steinerProblems.steinerArborescenceApproximation.GFLACAlgorithm;
 import graphTheory.algorithms.steinerProblems.steinerArborescenceApproximation.ShPAlgorithm;
+import graphTheory.algorithms.steinerProblems.steinerArborescenceApproximation.SteinerArborescenceApproximationAlgorithm;
 import graphTheory.graph.Arc;
 import graphTheory.graph.DirectedGraph;
 import graphTheory.graphDrawer.EnergyAnalogyGraphDrawer;
@@ -38,14 +40,14 @@ public class LocalSteinerTreeGenerator {
 	public LocalSteinerTreeGenerator(int dID) {
 		this.dID = dID;
 		this.circleRange = 4.0;
-		this.k = 20;
+		this.k = 8;
 		hourGap = 30;
 		mapEvents = new HashMap<Integer, Event>();
 		init();
 	}
 	
 	
-	public ShPAlgorithm compute(int id){
+	public SteinerArborescenceApproximationAlgorithm compute(int id){
 		Event event = searchEvent(id);
 		if(event != null)
 			return compute(searchEvent(id));
@@ -58,7 +60,7 @@ public class LocalSteinerTreeGenerator {
 	 * @param id
 	 * @return
 	 */
-	public ShPAlgorithm compute(Event e){
+	public SteinerArborescenceApproximationAlgorithm compute(Event e){
 		
 		DirectedGraph dg = new DirectedGraph();
 		
@@ -93,10 +95,11 @@ public class LocalSteinerTreeGenerator {
 			sdi.setRequired(event.getId());
 		}
 		
-		ShPAlgorithm alg = new ShPAlgorithm();
+		SteinerArborescenceApproximationAlgorithm alg = new GFLACAlgorithm();
 		alg.setInstance(sdi);
 		alg.compute();
 		printTree(alg.getArborescence());
+		visualizeArcs(alg.getArborescence());
 		
 		return alg;
 	}
@@ -144,6 +147,7 @@ public class LocalSteinerTreeGenerator {
 	
 	private void printTree(Set<Arc> arcs){
 		
+		if(arcs == null) return;
 		Set<Event> eventsMap = new HashSet<Event>();
 		for(Arc arc : arcs){
 			eventsMap.add(searchEvent(arc.getInput()));
@@ -156,9 +160,28 @@ public class LocalSteinerTreeGenerator {
 	}
 	
 	
+	private void visualizeArcs(Set<Arc> arcs){
+		if(arcs == null) return;
+		DirectedGraph dg = new DirectedGraph();
+		
+		//add vertices
+		for(Arc arc : arcs){
+			dg.addVertice(arc.getInput());
+			dg.addVertice(arc.getOutput());
+		}
+		
+		//add arcs
+		for(Arc arc : arcs){
+			dg.addArc(arc.getInput(), arc.getOutput(), true);
+		}
+		
+		new EnergyAnalogyGraphDrawer(dg);
+	}
+	
+	
 	public static void main(String[] args) {
 		
-		int disaster_id = 3;
+		int disaster_id = 2;
 		List<Event> finalR = null;
 		
 		try {
@@ -179,9 +202,9 @@ public class LocalSteinerTreeGenerator {
 		LocalSteinerTreeGenerator stg = new LocalSteinerTreeGenerator(disaster_id);
 		
 		for(Event e : st){
-			if(e.getId() == 14774){
+			if(e.getId() == 12330){
 				System.out.println(e.getId());
-				ShPAlgorithm alg = stg.compute(e);
+				SteinerArborescenceApproximationAlgorithm alg = stg.compute(e);
 				System.out.println("Returned solution : " + alg.getArborescence());
 				System.out.println("Cost: " + alg.getCost());
 				System.out.println("Running Time: " + alg.getTime() + " ms");

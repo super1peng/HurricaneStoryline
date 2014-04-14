@@ -70,6 +70,8 @@ Irene
 6. Rain and wind from Hurricane Irene hit Kill Devil Hills, N.C. on Aug. 27, 2011.
 7. A person makes their way in the rain in Times Square in New York August 28, 2011 as Hurricane Irene hits the city and Tri State area with rain and high winds.
 
+http://www.highcharts.com/demo/column-basic
+perl ROUGE-1.5.5.pl -d -l 250 -a -n 2 -m -2 4 -u -x -e data/ rougejk.im
 
 ---------------------------------------------
 1 ROUGE-1 Average_R: 0.48005 (95%-conf.int. 0.38129 - 0.53289)
