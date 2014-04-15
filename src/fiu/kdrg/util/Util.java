@@ -38,6 +38,9 @@ public class Util {
 	
 	
 	
+	
+	
+	
 	/**
 	 * To test a string str whether it can be matched by regular expressions regex
 	 *  It will return match string.
@@ -84,7 +87,6 @@ public class Util {
 		}catch(IllegalArgumentException ex) {
 			
 		}
-		System.out.println(ld.getMonthOfYear());
 	}
 	
 	

@@ -295,27 +295,6 @@ function FiuStorylineMapUtilObject(){
 				self.displayPolys(map,arcEventsMap,arcs,self.redPolyOptions);
 				
 			});
-			
-			
-			
-			
-			
-			
-			
-			
-//			var heatEvents = chooseMarkerNeighbors(marker,self.allEvents,4);
-//			console.log(heatEvents.length);
-//			self.heatMap.setData(eventsToMVCArray(heatEvents));			
-//			self.heatMap.setMap(map);
-//			
-//			var fname = "storyline" + marker.event.id + ".out";
-//			console.log(fname);
-//			$.get("LoadFinalEventServlet",{fileName:fname},function(rtnData){
-//				var layer2Storyline = rtnData.events;
-////				console.log(layer2Storyline);
-//				updateContentOfStoryPanel(layer2Storyline);
-//				
-//			});
 		});
 	};
 	
@@ -435,35 +414,5 @@ function FiuStorylineMapUtilObject(){
 	
 		return content;
 	};
-	
-};
-
-
-
-
-
-
-function FiuGoogleHeatMap(){
-	
-	var self = this;
-	
-	self.heatmap = new google.maps.visualization.HeatmapLayer({});
-	
-	FiuGoogleHeatMap.prototype.setMap = function(map){
-		self.map = map;
-	};
-	
-	FiuGoogleHeatMap.prototype.setData = function(data){
-		self.data = data;
-	};
-	
-	FiuGoogleHeatMap.prototype.showHeatMap = function(){
-		self.heatmap.setMap(self.map);
-	};
-	
-	FiuGoogleHeatMap.prototype.toggleHeatMap = function(){
-		self.heatmap.setMap(self.heatmap.getMap()? null : self.map);
-	};
-	
 	
 };

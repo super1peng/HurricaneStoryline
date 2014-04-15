@@ -4,19 +4,21 @@
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <title>storyline</title>
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAzxy0BQhuWyKhah5BG-2tzdqE2CwWXgNM&sensor=false&libraries=visualization"></script>
-        <script type="text/javascript" src="jquery-1.8.1.js">
-        </script>
-        <link type="text/css" href="./css/start/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />
-		<link rel="stylesheet" href="./css/hidable.css" />
-		<link rel="stylesheet" href="./css/jqcloud.css" />
-        <script type="text/javascript" src="js/jquery-1.8.0.min.js">
-        </script>
-        <script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js">
-        </script>
+        
+        <!-- Jquery and Jquery ui -->
+		<script type="text/javascript" src="js/jquery/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="js/jquery/ui/jquery-ui.js"></script>
+		<link href="js/jquery/themes/base/jquery-ui.css" rel="stylesheet"
+			media="screen" />
+		
+		<!-- bootstrap -->
+		<script type="text/javascript" src="js/bootstrap/js/bootstrap.js"></script>
+		<link href="js/bootstrap/css/bootstrap.css" rel="stylesheet">
+        
+        <!-- self defined js -->
 		<script type="text/javascript" src="js/mapUtil.js"></script>
-		<script type="text/javascript" src="js/markerclusterer.js"></script>
-		<script type="text/javascript" src="js/wordprocess.js"></script>
-		<script type="text/javascript" src="js/jqcloud-1.0.4.js"></script>
+		<link rel="stylesheet" href="./css/hidable.css" />
+		
         <style type="text/css">
             html {
                 height: 100%
@@ -60,7 +62,7 @@
 			$(function(){
 				
 				loadFinalEvents();
-				setHidableHeight(300);
+				setHidableHeight(250);
 				
 				$('.hidable_toggler_btn').click(function(){
 					clickHidableToggler();
@@ -122,8 +124,10 @@
     </head>
     <body onload="mapInitialize()">
     	<div class="controlPanel">
-    		<input type="button" class="showAll" value="showAll">
-			<input type="button" class="clearAll" value="clearAll">
+    		<!-- <input type="button" class="showAll" value="showAll">
+			<input type="button" class="clearAll" value="clearAll"> -->
+			
+			
 			<input type="button" class="showDom" value="showDom">
 			<input type="button" class="clearDom" value="clearDom">
 			<input type="button" class="showStorylinePath" value="showStorylinePath">
@@ -134,6 +138,8 @@
         
         <div id="map_canvas">
         </div>
+        
+        
 		<div class="hidable" style="position:relative;bottom:200px;height:200px;background:rgba(14, 13, 13, 0.38)">
 			<div class="hidable_toggler" align="center" style="position: absolute;right: 50%;top: -22px;">
                	<span class="hidable_toggler_btn"><em class="control_arrow_down"></em></span>
