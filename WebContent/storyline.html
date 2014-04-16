@@ -42,27 +42,29 @@
         	google.maps.visualRefresh = true;
             var map;
 			var testData = []; 
-			var mapUtil = new FiuStorylineMapUtilObject();
-			var disasterID;
-            
-            //add one array to map so as to store markers attached to map.
-            google.maps.Map.prototype.markers = new Array();
-            //function to clear markers attached to this map, so as to refresh the map	
-            google.maps.Map.prototype.clearMarkers = function(){
-                for (var i = 0; i < this.markers.length; i++) {
-                    this.markers[i].setMap(null);
-                }
-                this.markers = new Array();
-            };
+			var disasterID = 1;
 			
-			
+            function mapInitialize(){
+                var mapOptions = {
+                    center: new google.maps.LatLng(38.62700, -90.19940),
+                    zoom: 4,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+               map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+            }
 
 
-			// # ready function			
+			//ready function			
 			$(function(){
 				
-				loadFinalEvents();
-				setHidableHeight(250);
+				loadFinalEvents(disasterID);
+				setHidableHeight(200);
+				
+				$(".hurricaneMenu li").click(function(){
+					$(".infoDisplay").text($(this).text());
+					disasterID = $(this).attr("dID");
+					loadFinalEvents(disasterID)
+				});
 				
 				$('.hidable_toggler_btn').click(function(){
 					clickHidableToggler();
@@ -70,68 +72,33 @@
 				
 			});
 			
-
-
-// #user defined function
             
-            function mapInitialize(){
-                var mapOptions = {
-                    center: new google.maps.LatLng(38.62700, -90.19940),
-                    zoom: 4,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-            }
-			
-			
-			function loadFinalEvents(){
-				
-				disasterID = 1;
-				$.get("LoadFinalEventServlet",{fileName:"allEvents1.out"},function(rtnData){
-					var events = rtnData.events;
-					testData = events;
-					mapUtil.setAllEvents(events);
-					$('.showAll').click(function(){
-						mapUtil.setMarkers(map,events);
-					});
-				});
-				
-				$.get("LoadFinalEventServlet",{fileName:"finalResult1.out"},function(rtnData){
-					
-					var events = rtnData.events;
-					mapUtil.setEvents(events);
-					
-					$('.showDom').click(function(){
-						mapUtil.setMarkers(map,events);
-					});
-					
-					
-					$('.showStorylinePath').click(function(){
-						var storylineNodes = chooseNodesOfMainStoryline(events);
-						mapUtil.setMarkers(map,storylineNodes);
-						mapUtil.displayPoly(map,storylineNodes,mapUtil.storylinePoly);
-					});
-					
-					
-				},'json');
-				
-			}
-
-
-			//function
-			
         </script>
     </head>
     <body onload="mapInitialize()">
-    	<div class="controlPanel">
+    	<div class="controlPanel" class="row" style="margin: 2px">
     		<!-- <input type="button" class="showAll" value="showAll">
 			<input type="button" class="clearAll" value="clearAll"> -->
 			
+			<div class="col-md-2">
+			<div class="btn-group">
+			  <button type="button" class="btn btn-danger infoDisplay">Hurricane Katrina</button>
+			  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+			    <span class="caret"></span>
+			    <span class="sr-only">City Pairs</span>
+			  </button>
+			  <ul class="dropdown-menu hurricaneMenu" role="menu">
+			    <li dID="1"><a href="#">Hurricane Katrina</a></li>
+			    <li dID="2"><a href="#">Hurricane Sandy</a></li>
+			    <li dID="3"><a href="#">Hurricane Irene</a></li>
+			  </ul>
+			</div>
+			</div>
 			
-			<input type="button" class="showDom" value="showDom">
-			<input type="button" class="clearDom" value="clearDom">
-			<input type="button" class="showStorylinePath" value="showStorylinePath">
-			<input type="button" class="hideStorylinePanel" value="hideStorylinePanel">
+			<input type="button" class="btn btn-primary showDom" value="showDom">
+			<input type="button" class="btn btn-primary clearDom" value="clearDom">
+			<input type="button" class="btn btn-primary showStorylinePath" value="showStorylinePath">
+			<input type="button" class="btn btn-primary hideStorylinePanel" value="hideStorylinePanel">
     	</div>
     	
 		<div class="mainPanel" style="position:relative;height:100%;width:100%">
@@ -151,10 +118,6 @@
 				</div>
 			</div>
 		</div>
-		</div>
-		
-		<div class="wordcloud" style="width: 550px; height: 350px;">
-			
 		</div>
 		
     </body>
