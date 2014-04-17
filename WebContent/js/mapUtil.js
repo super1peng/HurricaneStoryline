@@ -6,17 +6,24 @@
 function loadFinalEvents(id) {
 
 	var mapUtil = new FiuStorylineMapUtilObject();
+	mapInitialize();
+	console.log(mapUtil);
 	
 	$.get("LoadFinalEventServlet", {
 		fileName : "allEvents" + id + ".out"
 	}, function(rtnData) {
 		var events = rtnData.events;
-//		testData = events;
 		mapUtil.setAllEvents(events);
+		
+		$('.showAll').unbind("click");
 		$('.showAll').click(function() {
-			mapUtil.setAllEvents(events);
 			var markers = convertEvents2Markers(map, events);
 			mapUtil.setAllMarkers(markers);
+		});
+		
+		$('.clearAll').unbind("click");
+		$('.clearAll').click(function() {
+			mapUtil.clearMarkers(mapUtil.allMarkers);
 		});
 	});
 	
@@ -27,13 +34,21 @@ function loadFinalEvents(id) {
 
 		var events = rtnData.events;
 		mapUtil.setDominateEvents(events);
-
+		
+		$('.showDom').unbind("click");
 		$('.showDom').click(function() {
 			var markers = convertEvents2Markers(map, events);
 			mapUtil.setDominateMarkers(markers);
 		});
-
+		
+		$('.clearDom').unbind("click");
+		$('.clearDom').click(function() {
+			mapUtil.clearMarkers(mapUtil.dominateMarkers);
+		});
+		
+		$('.showStorylinePath').unbind("click");
 		$('.showStorylinePath').click(function() {
+			console.log(mapUtil);
 			var storylineEvents = chooseNodesOfMainStoryline(events);
 			updateContentOfStoryPanel(storylineEvents);
 			var markers = convertEvents2Markers(map, storylineEvents);
