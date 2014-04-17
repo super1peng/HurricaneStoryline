@@ -15,6 +15,10 @@
 		<script type="text/javascript" src="js/bootstrap/js/bootstrap.js"></script>
 		<link href="js/bootstrap/css/bootstrap.css" rel="stylesheet">
         
+        <!-- link for side bar -->
+		<link rel="stylesheet" href="../demoHome/css/navigator.css" />
+		<script type="text/javascript" src="../demoHome/js/sidebar.js"></script>
+		
         <!-- self defined js -->
 		<script type="text/javascript" src="js/mapUtil.js"></script>
 		<link rel="stylesheet" href="./css/hidable.css" />
@@ -27,10 +31,7 @@
                 height: 96%;
                 margin: 0;
                 padding: 0
-            } #map_canvas {
-                width: 100%;
-                height: 100%;
-            } #infoDiv {
+            }#infoDiv {
                 font-size: 12px;
                 border-spacing: 1px;
                 width: auto;
@@ -76,7 +77,9 @@
         </script>
     </head>
     <body onload="mapInitialize()">
-    	<div class="controlPanel" class="row" style="margin: 2px">
+    	<div id="sidebar"></div>
+    	
+    	<div class="controlPanel" class="row" style="margin: 2px;margin-left:25px;">
 			
 			<div class="col-md-2">
 			<div class="btn-group">
@@ -103,7 +106,7 @@
     	
 		<div class="mainPanel" style="position:relative;height:100%;width:100%">
         
-        <div id="map_canvas">
+        <div id="map_canvas" style="margin-left:25px;width: 98%;height: 100%;">
         </div>
         
         
